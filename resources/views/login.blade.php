@@ -49,7 +49,7 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
                 <input type="email" class="ggg" name="user_email" placeholder="Nhập Email" required="">
                 <input type="password" class="ggg" name="user_password" placeholder="Nhập mật khẩu" required="">
                 <span>Chưa đăng ký? <a href="{{ URL::to('/register') }}">Đăng Ký</a></span>
-                <h6>Quên mật khẩu? <a href="#">click lấy lại mật khẩu</a></h6>
+                <h6>Quên mật khẩu? <a href="{{ URL::to('/forgot') }}">click lấy lại mật khẩu</a></h6>
                 <div class="clearfix"></div>
                 <input type="submit" value="Đăng Nhập" name="login">
             </form>

@@ -3,19 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Coupon;
-use App\Models\Customer;
-use App\Models\Login;
+use App\Models\Users;
 use App\Models\Order;
 use App\Models\Order_Details;
 use App\Models\Product;
 use App\Models\Shipping;
-use App\Models\Social;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Session;
-use Laravel\Socialite\Facades\Socialite;
-use App\Rules\Captcha;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 
@@ -86,10 +80,10 @@ class OrderController extends Controller
         $order_details = Order_Details::where('order_code', $checkout_code)->get();
         $order = Order::where('order_code', $checkout_code)->get();
         foreach ($order as $key => $ord) {
-            $customer_id = $ord->customer_id;
+            $user_id = $ord->user_id;
             $shipping_id = $ord->shipping_id;
         }
-        $customer = Customer::where('customer_id', $customer_id)->first();
+        $user = Users::where('customer_id', $user_id)->first();
         $shipping = Shipping::where('shipping_id', $shipping_id)->first();
 
         $order_details_product = Order_Details::with('product')->where('order_code', $checkout_code)->get();
@@ -143,9 +137,9 @@ class OrderController extends Controller
 
         $output .= '
 					<tr>
-						<td>' . $customer->customer_name . '</td>
-						<td>' . $customer->customer_phone . '</td>
-						<td>' . $customer->customer_email . '</td>
+						<td>' . $user->user_name . '</td>
+						<td>' . $user->user_phone . '</td>
+						<td>' . $user->user_email . '</td>
 
 					</tr>';
 
@@ -268,11 +262,11 @@ class OrderController extends Controller
         $order_details = Order_Details::with('product')->where('order_code', $order_code)->get();
         $order = Order::where('order_code', $order_code)->get();
         foreach ($order as $key => $ord) {
-            $customer_id = $ord->customer_id;
+            $user_id = $ord->user_id;
             $shipping_id = $ord->shipping_id;
             $order_status = $ord->order_status;
         }
-        $customer = Customer::where('customer_id', $customer_id)->first();
+        $customer = Users::where('user_id', $user_id)->first();
         $shipping = Shipping::where('shipping_id', $shipping_id)->first();
 
         $order_details_product = Order_Details::with('product')->where('order_code', $order_code)->get();

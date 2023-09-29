@@ -4,21 +4,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="">
-    {{-- <meta name="description" content="{{$meta_desc}}">
-    <meta name="keywords" content="{{$meta_keywords}}">
-    <meta name="robots" content="INDEX,FOLLOW">
-    <link rel="canonical" href="{{$link_url}}" />
-    <link rel="icon" type="image/x-icon" href="{{$link_url}}"/> --}}
-    {{-- <meta property="og:image" content="{{$image_og}}" />; --}}
-    {{-- <meta property="og:site_name" content="{{$link_url}}" />
-    <meta property="og:description" content="{{$meta_desc}}" />
-    <meta property="og:title" content="{{$meta_title}}" />
-    <meta property="og:url" content="{{$link_url}}" /> --}}
     <meta property="og:type" content="website" />
-    <meta property="fb:app_id" content="&#123;YOUR_APP_ID&#125;" />
-    <meta property="fb:admins" content="&#123;YOUR_FACEBOOK_USER_ID&#125;"/>
-    <meta property="fb:admins" content="&#123;YOUR_FACEBOOK_USER_ID_1&#125;"/>
-    <meta property="fb:admins" content="&#123;YOUR_FACEBOOK_USER_ID_2&#125;"/>
+    <meta property="fb:app_id" content="YOUR_APP_ID" />
+    <meta property="fb:admins" content="YOUR_FACEBOOK_USER_ID"/>
+    <meta property="fb:admins" content="YOUR_FACEBOOK_USER_ID_1"/>
+    <meta property="fb:admins" content="YOUR_FACEBOOK_USER_ID_2"/>
     <title>Trang chủ</title>
     <link href="{{asset('public/frontend/css/bootstrap.min.css')}}" rel="stylesheet">
     <link href="{{asset('public/frontend/css/font-awesome.min.css')}}" rel="stylesheet">
@@ -54,17 +44,6 @@
                             </ul>
                         </div>
                     </div>
-                    <div class="col-sm-6">
-                        <div class="social-icons pull-right">
-                            <ul class="nav navbar-nav">
-                                <li><a href="#"><i class="fa fa-facebook"></i></a></li>
-                                <li><a href="#"><i class="fa fa-twitter"></i></a></li>
-                                <li><a href="#"><i class="fa fa-linkedin"></i></a></li>
-                                <li><a href="#"><i class="fa fa-dribbble"></i></a></li>
-                                <li><a href="#"><i class="fa fa-google-plus"></i></a></li>
-                            </ul>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div><!--/header_top-->
@@ -80,39 +59,24 @@
                     <div class="col-sm-12">
                         <div class="shop-menu pull-right">
                             <ul class="nav navbar-nav">
-                                <li><a href="#"><i class="fa fa-star"></i> Yêu thích</a></li>
-
+                                <li>
+                                    <a href="{{URL::to('/gio-hang')}}">
+                                        <i class="fa fa-shopping-cart"></i>
+                                    </a>
+                                </li>
                                 <?php
-                                    $user = Session::get('user');
-                                    $shipping_id = Session::get('shipping_id');
-                                    if($user != NULL && $shipping_id==NULL) {
-                                ?>
-                                     <li><a href="{{URL::to('/checkout')}}"><i class="fa fa-crosshairs"></i> Thanh toán</a></li>
-                                <?php
-                                    }elseif($user != NULL && $shipping_id!=NULL) {
-                                ?>
-                                    <li><a href="{{URL::to('/payment')}}"><i class="fa fa-crosshairs"></i> Thanh toán</a></li>
-                                <?php
-                                    }else {
-                                ?>
-                                    <li><a href="{{URL::to('/login-checkout')}}"><i class="fa fa-crosshairs"></i> Thanh toán</a></li>
-                                <?php
-                                    }
-                                ?>
-                                <li><a href="{{URL::to('/show-cart')}}"><i class="fa fa-shopping-cart"></i> Giỏ hàng</a></li>
-                                <?php
-                                    $user = Session::get('user');
+                                    $user = Auth::user();
                                     if($user != NULL) {
                                 ?>
                                         <ul class="nav pull-right top-menu">
                                             <li class="dropdown">
                                                 <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                                                    <img alt="" src="{{ asset('public/backend/images/2.png') }}">
+
                                                     <span class="username">
                                                         <?php
-                                                        $name = Session::get('user');
-                                                        if ($name && $user->user_name) {
-                                                            echo $user->user_name;
+                                                        $name = Auth::user()->user_name;
+                                                        if ($name) {
+                                                            echo $name;
                                                         }
                                                         ?>
                                                     </span>
@@ -120,7 +84,7 @@
                                                 </a>
                                                 <ul class="dropdown-menu extended logout">
                                                     <li><a href="#"><i class=" fa fa-suitcase"></i>   Thông tin cá nhân</a></li>
-                                                    <li><a href="#"><i class="fa fa-cog"></i>   Trang quản trị</a></li>
+                                                    <li><a href="{{URL::to('/dashboard')}}"><i class="fa fa-cog"></i>   Trang quản trị</a></li>
                                                     <li><a href="{{ URL::to('logout-auth') }}"><i class="fa fa-key"></i>   Đăng xuất</a></li>
                                                 </ul>
                                             </li>
@@ -144,24 +108,7 @@
         <div class="header-bottom">
             <div class="container">
                 <div class="row">
-                    <div class="col-sm-7">
-                        <div class="mainmenu pull-left">
-                            <ul class="nav navbar-nav collapse navbar-collapse">
-                                <li><a href="{{URL::to('/trang-chu')}}" class="active">Trang chủ</a></li>
-                                <li class="dropdown"><a href="#">Sản phẩm<i class="fa fa-angle-down"></i></a>
-                                    <ul role="menu" class="sub-menu">
-                                        <li><a href="shop.html">Sản phẩm</a></li>
-                                    </ul>
-                                </li>
-                                <li class="dropdown">
-                                    <a href="#">Tin tức<i class="fa fa-angle-down"></i></a>
-                                </li>
-                                <li><a href="{{URL::to('/gio-hang')}}">Giỏ hàng</a></li>
-                                <li><a href="contact-us.html">Liên hệ</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="col-sm-5">
+                    <div class="col-sm-12">
                         <form action={{URL::to('/tim-kiem')}} method="POST">
                             {{ csrf_field() }}
                             <div class="search_box pull-right">
@@ -172,7 +119,8 @@
                     </div>
                 </div>
             </div>
-        </div><!--/header-bottom-->
+        </div>
+        <!--/header-bottom-->
         <!--header-category-->
         <div class="header-category">
             <div class="container">
@@ -215,9 +163,6 @@
 
     </footer>
     <!--/Footer-->
-
-
-
     <script src="{{asset('public/frontend/js/jquery.js')}}"></script>
     <script src="{{asset('public/frontend/js/bootstrap.min.js')}}"></script>
     <script src="{{asset('public/frontend/js/jquery.scrollUp.min.js')}}"></script>
@@ -231,9 +176,7 @@
      <script type="text/javascript">
         $(document).ready(function(){
             $('.add-to-cart').click(function(){
-
                 var id = $(this).data('id_product');
-                // alert(id);
                 var cart_product_id = $('.cart_product_id_' + id).val();
                 var cart_product_name = $('.cart_product_name_' + id).val();
                 var cart_product_image = $('.cart_product_image_' + id).val();
@@ -244,32 +187,26 @@
                 if(parseInt(cart_product_qty)>parseInt(cart_product_quantity)){
                     alert('Làm ơn đặt nhỏ hơn ' + cart_product_quantity);
                 }else{
-
                     $.ajax({
-                        url: '{{url('/add-cart-ajax')}}',
+                        url: '{{url('/add-to-cart')}}',
                         method: 'POST',
                         data:{cart_product_id:cart_product_id,cart_product_name:cart_product_name,cart_product_image:cart_product_image,cart_product_price:cart_product_price,cart_product_qty:cart_product_qty,_token:_token,cart_product_quantity:cart_product_quantity},
                         success:function(){
-
                             swal({
-                                    title: "Đã thêm sản phẩm vào giỏ hàng",
-                                    text: "Bạn có thể mua hàng tiếp hoặc tới giỏ hàng để tiến hành thanh toán",
-                                    showCancelButton: true,
-                                    cancelButtonText: "Xem tiếp",
-                                    confirmButtonClass: "btn-success",
-                                    confirmButtonText: "Đi đến giỏ hàng",
-                                    closeOnConfirm: false
-                                },
-                                function() {
-                                    window.location.href = "{{url('/gio-hang')}}";
-                                });
-
+                                title: "Đã thêm sản phẩm vào giỏ hàng",
+                                text: "Bạn có thể mua hàng tiếp hoặc tới giỏ hàng để tiến hành thanh toán",
+                                showCancelButton: true,
+                                cancelButtonText: "Xem tiếp",
+                                confirmButtonClass: "btn-success",
+                                confirmButtonText: "Đi đến giỏ hàng",
+                                closeOnConfirm: false
+                            },
+                            function() {
+                                window.location.href = "{{url('/gio-hang')}}";
+                            });
                         }
-
                     });
                 }
-
-
             });
         });
     </script>

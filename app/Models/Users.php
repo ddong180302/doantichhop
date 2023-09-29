@@ -19,9 +19,9 @@ class Users extends Authenticatable implements MustVerifyEmail
         'user_password',
         'user_address',
         'user_phone',
-        'user_picture',
-        'status',
-        'role_id',
+        'user_avatar',
+        'user_status',
+        'user_role',
         'user_token',
     ];
 
@@ -29,4 +29,9 @@ class Users extends Authenticatable implements MustVerifyEmail
     protected $primaryKey = 'user_id';
     protected $table = 'tbl_users';
     protected $hidden = [];
+
+    public function getAuthPassword()
+    {
+        return $this->user_password;
+    }
 }

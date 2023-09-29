@@ -19,13 +19,9 @@ class Category extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'meta_keywords',
         'category_name',
-        'slug_category_product',
         'category_desc',
-        'category_parent',
         'category_status',
-        'category_orders'
     ];
 
     /**

@@ -13,13 +13,9 @@ return new class extends Migration
     {
         Schema::create('tbl_category_product', function (Blueprint $table) {
             $table->increments('category_id');
-            $table->text('meta_keywords');
             $table->string('category_name');
-            $table->string('slug_category_product');
-            $table->text('category_desc');
-            $table->integer('category_parent');
+            $table->text('category_desc')->nullable();
             $table->integer('category_status');
-            $table->integer('category_orders');
             $table->timestamps();
         });
     }

@@ -7,20 +7,18 @@ use Illuminate\Support\Facades\Redirect;
 use App\Models\Users;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Mail;
 
-session_start();
-
 class AuthController extends Controller
 {
     public function AuthLogin()
     {
-        $user = Session::get('user');
-        if ($user->user_id) {
+
+        $user_id = Auth::id();
+        if ($user_id) {
             return Redirect::to('/');
         } else {
             return Redirect::to('login')->send();
@@ -56,7 +54,6 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->with('error', 'Bạn cần phải nhập đầy đủ thông tin để đăng ký!');
         }
-
         try {
             $user_token = strtoupper(Str::random(10));
             $data = $request->all();
@@ -71,7 +68,7 @@ class AuthController extends Controller
                 $user->user_phone = $data['user_phone'];
                 $user->user_token = $user_token;
                 $user->user_password = Hash::make($data['user_password']);
-                $user->role_id = 1;
+                $user->user_role = "NGUOIDUNG";
                 $user->save();
                 Mail::send('pages.active_account', compact('user'), function ($email) use ($user) {
                     $email->subject('Đồ án tích hợp nhóm 4 - Xác Nhận tài khoản');
@@ -89,8 +86,6 @@ class AuthController extends Controller
 
     public function active_email($user_id)
     {
-        //$user = Users::where('user_id',  $user_id)->first();
-        //$user_token = $user->user_token;
         return view('pages.active_email')->with('user_id', $user_id);
     }
 
@@ -100,7 +95,7 @@ class AuthController extends Controller
         $data = $request->all();
         $user_token = $data['user_token'];
         if ($user->user_token === $user_token) {
-            $user->update(['status' => 1, 'user_token' => null]);
+            $user->update(['user_status' => 1, 'user_token' => null]);
             return redirect('/login')->with('message', 'Xác nhận tài khoản thành công, bạn có thể đăng nhập');
         } else {
             return redirect('/register')->with('error', 'Mã xác nhận bạn gửi không hợp lệ');
@@ -129,15 +124,13 @@ class AuthController extends Controller
             'user_password' => 'required|max:255',
         ]);
 
-        $user = Users::where('user_email', $request->user_email)->first();
-        $user_id = $user->user_id;
-
-        if ($user && Hash::check($request->user_password, $user->user_password)) {
+        if (Auth::attempt(['user_email' => $request->user_email, 'user_password' => $request->user_password])) {
             // Đăng nhập thành công
-            if ($user->status === 0) {
+            $user = Users::where('user_email', $request->user_email)->first();
+            if ($user && $user->user_status === 0) {
+                $user_id = $user->user_id;
                 return redirect('/login')->with('message', 'Đăng nhập thất bại bạn cần phải <a href="' . URL::to('/active-email/' . $user_id) . '">xác thực tài khoản</a>!');
             }
-            Session::put('user', $user);
             return redirect('/')->with('message', 'Đăng nhập thành công!');
         } else {
             // Đăng nhập thất bại
@@ -147,7 +140,71 @@ class AuthController extends Controller
     public function logout_auth()
     {
         $this->AuthLogin();
-        Session::put('user', null);
+        Auth::logout();
         return Redirect::to('/login')->with('message', 'Đăng xuất thành công!');
+    }
+
+
+    public function forgot()
+    {
+        return view('pages.forgot');
+    }
+
+    public function forgot_email(Request $request)
+    {
+        $user_token = strtoupper(Str::random(10));
+        // Kiểm tra tính duy nhất của địa chỉ email
+        if (!$this->checkEmailExists($request->user_email)) {
+            $user = Users::where('user_email', $request->user_email)->first();
+            if ($user) {
+                $user->update(['user_token' => $user_token]);
+                Mail::send('pages.send_m_forgot_password', compact('user'), function ($email) use ($user) {
+                    $email->subject('Đồ án tích hợp nhóm 4 - Xác Nhận tài khoản');
+                    $email->to($user->user_email, $user->user_name);
+                });
+                $user_id = $user->user_id;
+                return redirect('/show-forgot/' . $user_id)->with('user_id', $user_id)->with('message', 'Đã xác nhận địa chỉ email. Vui lòng check email để lấy mã.');
+            }
+        } else {
+            return redirect()->back()->with('message', 'Địa chỉ email bạn nhập không tồn tại. Vui lòng sử dụng địa chỉ email mà bạn đã đăng ký.');
+        }
+    }
+
+    public function show_forgot(Request $request, $user_id)
+    {
+        return view('pages.forgot_actived')->with('user_id', $user_id);
+    }
+
+    public function forgot_actived(Request $request, $user_id)
+    {
+        $user = Users::where('user_id',  $user_id)->first();
+        $data = $request->all();
+        $user_token = $data['user_token'];
+        if ($user->user_token === $user_token) {
+            $user->update(['user_status' => 1, 'user_token' => null]);
+            return redirect('/show-change-password/' . $user_id)->with('user_id', $user_id)->with('message', 'Xác nhận tài khoản thành công, bạn có thể nhập mật khẩu mới');
+        } else {
+            return redirect()->back()->with('error', 'Mã xác nhận bạn gửi không hợp lệ');
+        }
+    }
+
+    public function show_change_password($user_id)
+    {
+        return view('pages.change_password')->with('user_id', $user_id);
+    }
+
+    public function change_password(Request $request, $user_id)
+    {
+        //if ($request->user_password === $request->confirm_password) {
+        $user = Users::where('user_id',  $user_id)->first();
+        if ($user) {
+            $user->update(['user_password' => Hash::make($request->user_password)]);
+            return Redirect::to('/login')->with('message', 'Đổi mật khẩu thành công, bạn có thể đăng nhập');
+        } else {
+            return redirect()->back()->with('error', 'Đổi mật khẩu thất bại!');
+        }
+        //} else {
+        //   return redirect()->back()->with('message', 'Mật khẩu xác nhận không đúng!');
+        //}
     }
 }

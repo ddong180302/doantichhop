@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('provider_user_id');
             $table->string('provider_user_email');
             $table->string('provider');
-            $table->integer('user');
+            $table->integer('user_id');
             $table->timestamps();
         });
     }

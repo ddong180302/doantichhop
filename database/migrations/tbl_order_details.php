@@ -16,10 +16,9 @@ return new class extends Migration
             $table->string('order_id');
             $table->integer('product_id');
             $table->string('product_name');
-            $table->double('product_price');
-            $table->string('product_coupon');
+            $table->integer('product_price');
             $table->string('product_feeship');
-            $table->integer('product_sales_quantity');
+            $table->integer('product_quantity');
             $table->timestamps();
         });
     }

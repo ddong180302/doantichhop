@@ -18,9 +18,10 @@ return new class extends Migration
             $table->string('user_password');
             $table->string('user_address')->nullable();
             $table->string('user_phone')->nullable();
-            $table->string('user_picture')->nullable();
-            $table->integer('role_id');
-            $table->string('user_token');
+            $table->string('user_avatar')->nullable();
+            $table->integer('user_status')->nullable();
+            $table->string('user_role');
+            $table->string('user_token')->nullable();
             $table->timestamps();
         });
     }

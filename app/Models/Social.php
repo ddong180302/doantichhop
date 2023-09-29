@@ -22,7 +22,7 @@ class Social extends Model
         'provider_user_id',
         'provider_user_email',
         'provider',
-        'user'
+        'user_id'
     ];
 
     /**

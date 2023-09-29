@@ -2,160 +2,166 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Route;
+use App\Helper\CartHelper;
+use App\Models\Category;
+use App\Models\Product;
+use App\Models\Users;
+use App\Models\Cart;
+use App\Models\CartDetail;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Gloudemans\Shoppingcart\Facades\Cart;
-use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 
-session_start();
 class CartController extends Controller
 {
-    public function gio_hang(Request $request)
+    public function AuthLogin()
     {
-        $cate_product = DB::table('tbl_category_product')->where('category_status', '0')->orderby('category_id', 'desc')->get();
-        $brand_product = DB::table('tbl_brand')->where('brand_status', '0')->orderby('brand_id', 'desc')->get();
-
-        return view('pages.cart.cart_ajax')->with('category', $cate_product)->with('brand', $brand_product);
-    }
-    public function add_cart_ajax(Request $request)
-    {
-        // Session::forget('cart');
-        $data = $request->all();
-        $session_id = substr(md5(microtime()), rand(0, 26), 5);
-        $cart = Session::get('cart');
-        if ($cart == true) {
-            $is_avaiable = 0;
-            foreach ($cart as $key => $val) {
-                if ($val['product_id'] == $data['cart_product_id']) {
-                    $is_avaiable++;
-                }
-            }
-            if ($is_avaiable == 0) {
-                $cart[] = array(
-                    'session_id' => $session_id,
-                    'product_name' => $data['cart_product_name'],
-                    'product_id' => $data['cart_product_id'],
-                    'product_image' => $data['cart_product_image'],
-                    'product_quantity' => $data['cart_product_quantity'],
-                    'product_qty' => $data['cart_product_qty'],
-                    'product_price' => $data['cart_product_price'],
-                );
-                Session::put('cart', $cart);
-            }
+        $user = Auth::user();
+        if ($user) {
+            return Redirect::to('/add-cart');
         } else {
-            $cart[] = array(
-                'session_id' => $session_id,
-                'product_name' => $data['cart_product_name'],
-                'product_id' => $data['cart_product_id'],
-                'product_image' => $data['cart_product_image'],
-                'product_quantity' => $data['cart_product_quantity'],
-                'product_qty' => $data['cart_product_qty'],
-                'product_price' => $data['cart_product_price'],
-
-            );
-            Session::put('cart', $cart);
-        }
-
-        Session::save();
-    }
-
-    public function delete_product($session_id)
-    {
-        $cart = Session::get('cart');
-        // echo '<pre>';
-        // print_r($cart);
-        // echo '</pre>';
-        if ($cart == true) {
-            foreach ($cart as $key => $val) {
-                if ($val['session_id'] == $session_id) {
-                    unset($cart[$key]);
-                }
-            }
-            Session::put('cart', $cart);
-            return redirect()->back()->with('message', 'Xóa sản phẩm thành công');
-        } else {
-            return redirect()->back()->with('message', 'Xóa sản phẩm thất bại');
+            return Redirect::to('/login')->send();
         }
     }
 
-    public function update_cart(Request $request)
+    public function add_cart_detail($product_id, $user_id, $detail_quantity)
     {
-        try {
-            $data = $request->all();
-            $cart = Session::get('cart');
-            if ($cart == true) {
-                $message = '';
-                foreach ($data['cart_qty'] as $key => $qty) {
-                    $i = 0;
-                    foreach ($cart as $session => $val) {
-                        $i++;
-                        if ($val['session_id'] == $key && $qty < $cart[$session]['product_quantity']) {
-                            $cart[$session]['product_qty'] = $qty;
-                            $message .= '<p style="color:blue">' . $i . ') Cập nhật số lượng :' . $cart[$session]['product_name'] . ' thành công</p>';
-                        } elseif ($val['session_id'] == $key && $qty > $cart[$session]['product_quantity']) {
-                            $message .= '<p style="color:red">' . $i . ') Cập nhật số lượng :' . $cart[$session]['product_name'] . ' thất bại</p>';
-                        }
+        $this->AuthLogin();
+        $product = Product::where('product_id', $product_id)->first();
+        $user = Users::where('user_id', $user_id)->first();
+        if ($product != null && $user != null) {
+            $cart = Cart::where('user_id', $user_id)->first();
+            if ($cart) {
+                $cart_id = $cart->cart_id;
+                // Lưu thông tin vào bảng "CartDetail"
+                $cartdetail = CartDetail::where('cart_id', $cart_id)->where('product_id', $product_id)->first();
+                if ($cartdetail) {
+                    if ($cartdetail->quantity < $product->product_quantity) {
+                        $cartdetail->quantity += $detail_quantity;
+                        $cartdetail->update();
+                        return redirect()->back()->with('message', 'Thêm sản phẩm thành công');
+                    } else {
+                        return redirect()->back()->with('message', 'Số lượng sản phẩm trong giỏ hàng đã vượt quá số lượng sản phẩm trong kho');
                     }
+                } else {
+                    $cartDetail = new CartDetail();
+                    $cartDetail->cart_id = $cart_id;
+                    $cartDetail->product_id = $product_id;
+                    $cartDetail->quantity += $detail_quantity;
+                    $cartDetail->save();
+                    return redirect()->back()->with('message', 'Thêm sản phẩm thành công');
                 }
-                Session::put('cart', $cart);
-                return redirect()->back()->with('message', $message);
             } else {
-                return redirect()->back()->with('message', 'Cập nhật số lượng thất bại');
+                $cart = new Cart();
+                $cart->user_id = $user_id;
+                $cart->save();
+
+                // Lấy cart_id
+                $cart_id = $cart->cart_id;
+
+                // Lưu thông tin vào bảng "CartDetail"
+                $cartDetail = new CartDetail();
+                $cartDetail->cart_id = $cart_id;
+                $cartDetail->product_id = $product_id;
+                $cartDetail->quantity += $detail_quantity;
+                $cartDetail->save();
+                return redirect()->back()->with('message', 'Thêm sản phẩm thành công');
             }
-        } catch (\Exception $e) {
-            echo '<script>';
-            echo 'console.log("Error: ' . $e->getMessage() . '");';
-            echo '</script>';
+        } else {
+            return redirect()->back()->with('message', 'Thêm sản phẩm thất bại');
         }
     }
 
-    public function delete_all_product()
+    public function add_cart($product_id, $user_id)
     {
-        $cart = Session::get('cart');
-        if ($cart == true) {
-            // Session::destroy();
-            Session::forget('cart');
-            Session::forget('coupon');
-            return redirect()->back()->with('message', 'Xóa hết giỏ thành công');
+        $this->AuthLogin();
+        $product = Product::where('product_id', $product_id)->first();
+        $user = Users::where('user_id', $user_id)->first();
+        if ($product != null && $user != null) {
+            $cart = Cart::where('user_id', $user_id)->first();
+            if ($cart) {
+                $cart->user_id = $user_id;
+                $cart->update();
+                $cart_id = $cart->cart_id;
+                // Lưu thông tin vào bảng "CartDetail"
+                $cartdetail = CartDetail::where('cart_id', $cart_id)->where('product_id', $product_id)->first();
+                if ($cartdetail) {
+                    if ($cartdetail->quantity < $product->product_quantity) {
+                        $cartdetail->quantity += 1;
+                        $cartdetail->update();
+                        return Redirect::to('/')->with('message', 'Thêm sản phẩm thành công');
+                    } else {
+                        return Redirect::to('/')->with('message', 'Số lượng sản phẩm trong giỏ hàng đã vượt quá số lượng sản phẩm trong kho');
+                    }
+                } else {
+                    $cartDetail = new CartDetail();
+                    $cartDetail->cart_id = $cart_id;
+                    $cartDetail->product_id = $product_id;
+                    $cartDetail->quantity += 1;
+                    $cartDetail->save();
+                    return Redirect::to('/')->with('message', 'Thêm sản phẩm thành công');
+                }
+            } else {
+                $cart = new Cart();
+                $cart->user_id = $user_id;
+                $cart->save();
+
+                // Lấy cart_id
+                $cart_id = $cart->cart_id;
+
+                // Lưu thông tin vào bảng "CartDetail"
+                $cartDetail = new CartDetail();
+                $cartDetail->cart_id = $cart_id;
+                $cartDetail->product_id = $product_id;
+                $cartDetail->quantity += 1;
+                $cartDetail->save();
+                return Redirect::to('/')->with('message', 'Thêm sản phẩm thành công');
+            }
+        } else {
+            return Redirect::to('/')->with('message', 'Thêm sản phẩm thất bại');
         }
     }
 
-    public function save_cart(Request $request)
+    public function delete_item_cart(Request $request, $product_id, $user_id, $cart_id, $cart_detail_id)
     {
-        $productId = $request->productid_hidden;
-        $quantity = $request->qty;
-        $product_info = DB::table('tbl_product')->where('product_id', $productId)->first();
-        $data['id'] = $product_info->product_id;
-        $data['qty'] = $quantity;
-        $data['name'] = $product_info->product_name;
-        $data['price'] = $product_info->product_price;
-        $data['weight'] = '123';
-        $data['options']['image'] = $product_info->product_image;
-        Cart::add($data);
-        return Redirect::to('/show-cart');
+        $product = Product::where('product_id', $product_id)->first();
+        $user = Users::where('user_id', $user_id)->first();
+        $cart = Cart::where('cart_id', $cart_id)->first();
+        $cart_detail = CartDetail::where('cart_detail_id', $cart_detail_id)->first();
+        if ($user && $product && $cart_detail && $cart) {
+            $cart_detail->delete();
+            return redirect()->back()->with('message', 'Xóa sản phẩm thành công!');
+        } else {
+            return redirect()->back()->with('message', 'Xóa sản phẩm thất bại!');
+        }
     }
 
     public function show_cart()
     {
-        $cate_product = DB::table('tbl_category_product')->where('category_status', '0')->orderByDesc('category_id')->get();
-        $brand_product = DB::table('tbl_brand')->where('brand_status', '0')->orderByDesc('brand_id')->get();
-
-        return view('pages.cart.show_cart')->with('category', $cate_product)->with('brand', $brand_product);
+        $this->AuthLogin();
+        $cate_product = Category::where('category_status', '1')->orderByDesc('category_id')->get();
+        $count_product = Cart::where('user_id', Auth::user()->user_id)->join('tbl_cart_detail', 'tbl_cart_detail.cart_id', '=', 'tbl_cart.cart_id')->join('tbl_product', 'tbl_product.product_id', '=', 'tbl_cart_detail.product_id')->count();
+        $cart = Cart::where('user_id', Auth::user()->user_id)->join('tbl_cart_detail', 'tbl_cart_detail.cart_id', '=', 'tbl_cart.cart_id')->join('tbl_product', 'tbl_product.product_id', '=', 'tbl_cart_detail.product_id')->get();
+        $total_price = 0;
+        foreach ($cart as $item) {
+            $total_price += $item->quantity * $item->product_price;
+        }
+        return view('pages.cart.show_cart')->with('category', $cate_product)->with('cart', $cart)->with('count_product', $count_product)->with('total_price', $total_price);
     }
 
-    public function delete_to_cart($rowId)
+    public function update_cart_detail($product_id, $user_id, $cart_id, $quantity)
     {
-        Cart::update($rowId, 0);
-        return Redirect::to('/show-cart');
-    }
+        $product = Product::where('product_id', $product_id)->first();
+        $user = Users::where('user_id', $user_id)->first();
+        $cart = Cart::where('cart_id', $cart_id)->first();
+        $cart_detail = CartDetail::where('cart_id', $cart_id)->where('product_id', $product_id)->first();
 
-    public function update_cart_quantity(Request $request)
-    {
-        $rowId = $request->rowId_cart;
-        $qty = $request->cart_quantity;
-        Cart::update($rowId, $qty);
-        return Redirect::to('/show-cart');
+        if ($user && $product && $cart_detail && $cart && $quantity) {
+            $cart_detail->quantity = $quantity;
+            $cart_detail->update();
+            return redirect()->back()->with('message', 'Cập nhật số lượng thành công!');
+        } else {
+            return redirect()->back()->with('message', 'Cập nhật số lượng thất bại!');
+        }
     }
 }

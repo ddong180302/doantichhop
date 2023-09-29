@@ -19,7 +19,6 @@ class DeliveryController extends Controller
         $fee_ship = FeeShip::find($data['feeship_id']);
         $fee_value = rtrim($data['fee_value'], '.');
         $fee_ship->fee_feeship = $fee_value;
-        toastify()->success('Your action was successful!');
         $fee_ship->save();
     }
     public function select_feeship()

@@ -37,14 +37,13 @@ Author: NHóm 4
 </head>
 
 <body>
-
     <section id="container">
         <!--header start-->
         <header class="header fixed-top clearfix">
             <!--logo start-->
             <div class="brand">
-                <a href="index.html" class="logo">
-                    ADMIN
+                <a href="{{ URL::to('/') }}" class="logo">
+                    QUẢN TRỊ
                 </a>
                 <div class="sidebar-toggle-box">
                     <div class="fa fa-bars"></div>
@@ -53,27 +52,26 @@ Author: NHóm 4
             <div class="top-nav clearfix">
                 <!--search & user info start-->
                 <ul class="nav pull-right top-menu">
-                    <li>
-                        <input type="text" class="form-control search" placeholder=" Search">
-                    </li>
                     <!-- user login dropdown start-->
                     <li class="dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                            <img alt="" src="{{ asset('public/backend/images/2.png') }}">
+                            <img alt="" src="{{ URL::to('public/uploads/product/anh.jpg') }}">
                             <span class="username">
                                 <?php
-                                $name = Session::get('admin_name');
-                                if ($name) {
-                                    echo $name;
+                                if (Auth::user()) {
+                                    $name = Auth::user()->user_name;
+                                    if ($name) {
+                                        echo $name;
+                                    }
                                 }
                                 ?>
                             </span>
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu extended logout">
-                            <li><a href="#"><i class=" fa fa-suitcase"></i>Profile</a></li>
-                            <li><a href="#"><i class="fa fa-cog"></i> Settings</a></li>
-                            <li><a href="{{ URL::to('logout-auth') }}"><i class="fa fa-key"></i> Log Out</a></li>
+                            <li><a href="#"><i class=" fa fa-suitcase"></i>Thông tin cá nhân</a></li>
+                            <li><a href="{{ URL::to('/') }}"><i class="fa fa-cog"></i> Trang chủ</a></li>
+                            <li><a href="{{ URL::to('logout-auth') }}"><i class="fa fa-key"></i> Đăng xuất</a></li>
                         </ul>
                     </li>
                     <!-- user login dropdown end -->
@@ -124,18 +122,6 @@ Author: NHóm 4
                                 </li>
                             </ul>
                         </li>
-
-                        <li class="sub-menu">
-                            <a href="javascript:;">
-                                <i class="fa fa-book"></i>
-                                <span>Thương hiệu sản phẩm</span>
-                            </a>
-                            <ul class="sub">
-                                <li><a href="{{ URL::to('/add-brand-product') }}">Thêm thương hiệu sản phẩm</a></li>
-                                <li><a href="{{ URL::to('/get-all-brand-product') }}">Liệt kê thương hiệu sản phẩm</a>
-                                </li>
-                            </ul>
-                        </li>
                         <li class="sub-menu">
                             <a href="javascript:;">
                                 <i class="fa fa-book"></i>
@@ -167,6 +153,19 @@ Author: NHóm 4
                                 <li><a href="{{ URL::to('/add-specifications') }}">Thêm thông số kỹ thuật sản phẩm</a>
                                 </li>
                                 <li><a href="{{ URL::to('/get-view-specifications') }}">Liệt kê chi tiết kỹ thuật</a>
+                                </li>
+                            </ul>
+                        </li>
+
+                        <li class="sub-menu">
+                            <a href="javascript:;">
+                                <i class="fa fa-book"></i>
+                                <span>Người Dùng</span>
+                            </a>
+                            <ul class="sub">
+                                <li><a href="{{ URL::to('/show-add-user') }}">Thêm người dùng</a>
+                                </li>
+                                <li><a href="{{ URL::to('/get-all-user ') }}">Liệt kê người dùng</a>
                                 </li>
                             </ul>
                         </li>

@@ -23,9 +23,8 @@ class Order_Details extends Model
         'product_id',
         'product_name',
         'product_price',
-        'product_coupon',
         'product_feeship',
-        'product_sales_quantity',
+        'product_quantity',
     ];
 
     /**
