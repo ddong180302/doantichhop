@@ -8,9 +8,7 @@ use App\Models\Product;
 use App\Models\Specifications;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Session;
 
 class ProductController extends Controller
 {
@@ -40,7 +38,7 @@ class ProductController extends Controller
     public function get_all_product()
     {
         $this->AuthLogin();
-        $get_all_product = Product::join('tbl_category_product', 'tbl_category_product.category_id', '=', 'tbl_product.category_id')->paginate(2);
+        $get_all_product = Product::join('tbl_category_product', 'tbl_category_product.category_id', '=', 'tbl_product.category_id')->paginate(4);
         return view('admin.product.get_all_product', compact('get_all_product'));
     }
 
@@ -64,11 +62,11 @@ class ProductController extends Controller
             $get_image->move('public/uploads/product', $new_image);
             $product->product_image = $new_image;
             $product->save();
-            return Redirect::to('/add-product')->with('message', 'Thêm sản phẩm thành công');
+            return Redirect::to('/add-specifications')->with('message', 'Thêm sản phẩm thành công');
         } else {
             $data['product_image'] = '';
             $product->save();
-            return Redirect::to('/add-product')->with('message', 'Thêm sản phẩm thành công');
+            return Redirect::to('/add-specifications')->with('message', 'Thêm sản phẩm thành công');
         }
     }
 
@@ -148,6 +146,16 @@ class ProductController extends Controller
         }
     }
 
+    public function search_product(Request $request)
+    {
+        $key_product = $request->key_product;
+        $search_product = Product::join('tbl_category_product', 'tbl_category_product.category_id', '=', 'tbl_product.category_id')
+            ->when($key_product, function ($query, $key_product) {
+                return $query->where('product_name', 'like', '%' . $key_product . '%');
+            })->paginate(4);
+        return view('admin.product.search_product')->with('message', 'Các sản phẩm bạn muốn tìm')->with('search_product', $search_product);
+    }
+
     public function add_specifications(Request $request)
     {
         $this->AuthLogin();
@@ -177,6 +185,6 @@ class ProductController extends Controller
         $specifications->size = $data['size'];
 
         $specifications->save();
-        return Redirect::to('/save-specifications-product')->with('message', 'Thêm thông số kỹ thuật sản phẩm thành công');
+        return redirect()->back()->with('message', 'Thêm thông số kỹ thuật sản phẩm thành công');
     }
 }

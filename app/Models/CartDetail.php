@@ -21,6 +21,9 @@ class CartDetail extends Model
     protected $fillable = [
         'cart_id',
         'product_id',
+        'image',
+        'name',
+        'price',
         'quantity',
     ];
 

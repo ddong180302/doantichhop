@@ -5,21 +5,26 @@
             <div class="panel-heading">
                 Liệt kê sản phẩm
             </div>
-            <div class="row w3-res-tb">
-                <div class="col-sm-5 m-b-xs">
+            <div class="row w3-res-tb" style="margin-bottom: 30px">
+                <div class="col-sm-7 m-b-xs">
                 </div>
-                <div class="col-sm-4">
-                </div>
-                <div class="col-sm-3">
-                    <div class="input-group">
-                        <input type="text" class="input-sm form-control" placeholder="Tìm kiếm">
-                        <span class="input-group-btn">
-                            <button class="btn btn-sm btn-default" type="button">Tìm kiếm</button>
-                        </span>
-                    </div>
+                <div class="col-sm-5">
+                    <form action="{{ URL::to('/search-product') }}" method="POST">
+                        {{ csrf_field() }}
+                        <div style="width: 100%; display: flex; flex-direction: row">
+                            <div style="width: 80%">
+                                <input type="text" name="key_product" class="input-sm form-control"
+                                    placeholder="Tìm kiếm theo tên">
+                            </div>
+                            <div style="width: 20%;">
+                                <button class="btn btn-sm btn-default" name="btn_product" type="button"
+                                    onclick="searchProduct()"><i class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
-            <div class="table-responsive">
+            <div class="table-responsive" id="table-container">
                 <?php
                 $message = Session::get('message');
                 if ($message) {
@@ -36,7 +41,7 @@
                             <th>Giá</th>
                             <th>Hình Ảnh</th>
                             <th>Trạng thái</th>
-                            <th>Action</th>
+                            <th>Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -80,12 +85,12 @@
                         @endforeach
                     </tbody>
                 </table>
+                <footer class="panel-footer">
+                    <div class="clearfix">
+                        {{ $get_all_product->links() }}
+                    </div>
+                </footer>
             </div>
-            <footer class="panel-footer">
-                <div class="clearfix">
-                    {{ $get_all_product->links() }}
-                </div>
-            </footer>
         </div>
     </div>
 @endsection

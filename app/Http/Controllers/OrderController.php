@@ -2,293 +2,117 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Coupon;
-use App\Models\Users;
+use App\Models\Cart;
+use App\Models\CartDetail;
 use App\Models\Order;
-use App\Models\Order_Details;
+use App\Models\Order_Detail;
+use App\Models\Payment;
 use App\Models\Product;
-use App\Models\Shipping;
+use App\Models\QuanHuyen;
+use App\Models\TinhThanhPho;
+use App\Models\Users;
+use App\Models\XaPhuongThiTran;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Session;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
+
+
 
 class OrderController extends Controller
 {
-    public function order_code(Request $request, $order_code)
+    public function show_order($user_id)
     {
-        $order = Order::where('order_code', $order_code)->first();
-        $order->delete();
-        Session::put('message', 'Xóa đơn hàng thành công');
-        return redirect()->back();
+        $cart = Cart::where('user_id', $user_id)->first();
+        $cart_id = $cart->cart_id;
+        $order = CartDetail::where('cart_id', $cart_id)->get();
+        $total_price = 0;
+        foreach ($order as $item) {
+            $total_price += $item->quantity * $item->price;
+        }
+        $count_product = CartDetail::where('cart_id', $cart_id)->count();
+        $user = Users::where('user_id', $user_id)->first();
+        $city = TinhThanhPho::where('matp', $user->matp)->first();
+        $city_province = TinhThanhPho::select('matp', 'name_city', 'type')->get();
+        $province = QuanHuyen::where('maqh', $user->maqh)->first();
+        $wards = XaPhuongThiTran::where('xaid', $user->xaid)->first();
+        $payment = Payment::select('payment_id', 'payment_method', 'payment_status')->first();
+        return view('pages.order.show_order', compact('order', 'city_province', 'count_product', 'city', 'province', 'wards', 'total_price', 'payment'));
     }
-    public function update_qty(Request $request)
+
+    public function show_verify_email_order($user_id)
     {
+        $user = Users::where('user_id', $user_id)->first();
+        $cart = Cart::where('user_id', $user_id)->first();
+        $cart_detail = CartDetail::where('cart_id', $cart->cart_id)->get();
+        $total_price = 0;
+        foreach ($cart_detail as $item) {
+            $total_price += $item->quantity * $item->price;
+        }
+        $city = TinhThanhPho::where('matp', $user->matp)->first();
+        $province = QuanHuyen::where('maqh', $user->maqh)->first();
+        $wards = XaPhuongThiTran::where('xaid', $user->xaid)->first();
+        $user_token = strtoupper(Str::random(10));
+        $user->user_token = $user_token;
+        $user->update();
+        Mail::send('pages.order.email_order', compact('user', 'cart_detail', 'city', 'province', 'wards', 'total_price'), function ($email) use ($user) {
+            $email->subject('Đồ án tích hợp nhóm 2 - Xác Nhận tài khoản');
+            $email->to($user->user_email, $user->user_name);
+        });
+        $user_id = $user->user_id;
+        return redirect('/verify-email-order/' . $user_id)->with('user_id', $user_id)->with('message', 'Vui lòng kiểm tra gmail của bạn để xác thực đơn hàng!');
+    }
+
+    public function verify_email_order($user_id)
+    {
+        return view('pages.order.verify_email_order')->with('user_id', $user_id);
+    }
+
+    public function verify_order(Request $request, $user_id)
+    {
+        $user = Users::where('user_id',  $user_id)->first();
+        $cart = Cart::where('user_id', $user->user_id)->first();
+        $cart_detail = CartDetail::where('cart_id', $cart->cart_id)->get();
+        $city = TinhThanhPho::where('matp', $user->matp)->first();
+        $province = QuanHuyen::where('maqh', $user->maqh)->first();
+        $wards = XaPhuongThiTran::where('xaid', $user->xaid)->first();
+
         $data = $request->all();
-        $order_details = Order_Details::where('product_id', $data['order_product_id'])->where('order_code', $data['order_code'])->first();
-        $order_details->product_sales_quantity = $data['order_qty'];
-        $order_details->save();
-    }
-    public function update_order_qty(Request $request)
-    {
-        //update order
-        $data = $request->all();
-        $order = Order::find($data['order_id']);
-        $order->order_status = $data['order_status'];
-        $order->save();
-        if ($order->order_status == 2) {
-            foreach ($data['order_product_id'] as $key => $product_id) {
+        $user_token = $data['user_token'];
+        if ($user->user_token === $user_token) {
+            $order = new Order();
+            $order->user_id = $user_id;
+            $order->order_status = 1;
+            $order->xaid = $wards->xaid;
+            $order->maqh = $province->maqh;
+            $order->matp = $city->matp;
+            $order->save();
 
-                $product = Product::find($product_id);
-                $product_quantity = $product->product_quantity;
-                $product_sold = $product->product_sold;
-                foreach ($data['quantity'] as $key2 => $qty) {
-                    if ($key == $key2) {
-                        $pro_remain = $product_quantity - $qty;
-                        $product->product_quantity = $pro_remain;
-                        $product->product_sold = $product_sold + $qty;
-                        $product->save();
-                    }
-                }
+            $order_id = $order->order_id;
+            foreach ($cart_detail as $item) {
+                $order_detail = new Order_Detail();
+
+                $order_detail->order_id = $order_id;
+                $order_detail->product_id = $item->product_id;
+                $order_detail->product_name = $item->name;
+                $order_detail->product_price = $item->price;
+                $order_detail->product_quantity = $item->quantity;
+
+                $order_detail->save();
             }
-        } elseif ($order->order_status != 2 && $order->order_status != 3) {
-            foreach ($data['order_product_id'] as $key => $product_id) {
 
-                $product = Product::find($product_id);
-                $product_quantity = $product->product_quantity;
-                $product_sold = $product->product_sold;
-                foreach ($data['quantity'] as $key2 => $qty) {
-                    if ($key == $key2) {
-                        $pro_remain = $product_quantity + $qty;
-                        $product->product_quantity = $pro_remain;
-                        $product->product_sold = $product_sold - $qty;
-                        $product->save();
-                    }
-                }
+            foreach ($cart_detail as $item) {
+                $product = Product::find($item->product_id);
+                $product->product_quantity -= $item->quantity;
+                $product->product_sold += $item->quantity;
+                $product->save();
             }
-        }
-    }
-    public function print_order($checkout_code)
-    {
-        $pdf = App::make('dompdf.wrapper');
-        $pdf->loadHTML($this->print_order_convert($checkout_code));
 
-        return $pdf->stream();
-    }
-    public function print_order_convert($checkout_code)
-    {
-        $order_details = Order_Details::where('order_code', $checkout_code)->get();
-        $order = Order::where('order_code', $checkout_code)->get();
-        foreach ($order as $key => $ord) {
-            $user_id = $ord->user_id;
-            $shipping_id = $ord->shipping_id;
-        }
-        $user = Users::where('customer_id', $user_id)->first();
-        $shipping = Shipping::where('shipping_id', $shipping_id)->first();
+            CartDetail::where('cart_id', $cart->cart_id)->delete();
+            $user->update(['user_status' => 1, 'user_token' => null]);
 
-        $order_details_product = Order_Details::with('product')->where('order_code', $checkout_code)->get();
-
-        foreach ($order_details_product as $key => $order_d) {
-
-            $product_coupon = $order_d->product_coupon;
-        }
-        if ($product_coupon != 'no') {
-            $coupon = Coupon::where('coupon_code', $product_coupon)->first();
-
-            $coupon_condition = $coupon->coupon_condition;
-            $coupon_number = $coupon->coupon_number;
-
-            if ($coupon_condition == 1) {
-                $coupon_echo = $coupon_number . '%';
-            } elseif ($coupon_condition == 2) {
-                $coupon_echo = number_format($coupon_number, 0, ',', '.') . 'đ';
-            }
+            return redirect('/')->with('message', 'Xác nhận đơn hàng thành công, bạn có thể tiếp tục mua hàng!');
         } else {
-            $coupon_condition = 2;
-            $coupon_number = 0;
-
-            $coupon_echo = '0';
+            return redirect()->back()->with('message', 'Mã xác thực bạn gửi không hợp lệ, vui lòng nhập lại');
         }
-
-        $output = '';
-
-        $output .= '<style>body{
-			font-family: DejaVu Sans;
-		}
-		.table-styling{
-			border:1px solid #000;
-		}
-		.table-styling tbody tr td{
-			border:1px solid #000;
-		}
-		</style>
-		<h1><centerCông ty TNHH một thành viên ABCD</center></h1>
-		<h4><center>Độc lập - Tự do - Hạnh phúc</center></h4>
-		<p>Người đặt hàng</p>
-		<table class="table-styling">
-				<thead>
-					<tr>
-						<th>Tên khách đặt</th>
-						<th>Số điện thoại</th>
-						<th>Email</th>
-					</tr>
-				</thead>
-				<tbody>';
-
-        $output .= '
-					<tr>
-						<td>' . $user->user_name . '</td>
-						<td>' . $user->user_phone . '</td>
-						<td>' . $user->user_email . '</td>
-
-					</tr>';
-
-
-        $output .= '
-				</tbody>
-
-		</table>
-
-		<p>Ship hàng tới</p>
-			<table class="table-styling">
-				<thead>
-					<tr>
-						<th>Tên người nhận</th>
-						<th>Địa chỉ</th>
-						<th>Sdt</th>
-						<th>Email</th>
-						<th>Ghi chú</th>
-					</tr>
-				</thead>
-				<tbody>';
-
-        $output .= '
-					<tr>
-						<td>' . $shipping->shipping_name . '</td>
-						<td>' . $shipping->shipping_address . '</td>
-						<td>' . $shipping->shipping_phone . '</td>
-						<td>' . $shipping->shipping_email . '</td>
-						<td>' . $shipping->shipping_notes . '</td>
-
-					</tr>';
-
-
-        $output .= '
-				</tbody>
-
-		</table>
-
-		<p>Đơn hàng đặt</p>
-			<table class="table-styling">
-				<thead>
-					<tr>
-						<th>Tên sản phẩm</th>
-						<th>Mã giảm giá</th>
-						<th>Phí ship</th>
-						<th>Số lượng</th>
-						<th>Giá sản phẩm</th>
-						<th>Thành tiền</th>
-					</tr>
-				</thead>
-				<tbody>';
-
-        $total = 0;
-
-        foreach ($order_details_product as $key => $product) {
-
-            $subtotal = $product->product_price * $product->product_sales_quantity;
-            $total += $subtotal;
-
-            if ($product->product_coupon != 'no') {
-                $product_coupon = $product->product_coupon;
-            } else {
-                $product_coupon = 'không mã';
-            }
-
-            $output .= '
-					<tr>
-						<td>' . $product->product_name . '</td>
-						<td>' . $product_coupon . '</td>
-						<td>' . number_format($product->product_feeship, 0, ',', '.') . 'đ' . '</td>
-						<td>' . $product->product_sales_quantity . '</td>
-						<td>' . number_format($product->product_price, 0, ',', '.') . 'đ' . '</td>
-						<td>' . number_format($subtotal, 0, ',', '.') . 'đ' . '</td>
-
-					</tr>';
-        }
-
-        if ($coupon_condition == 1) {
-            $total_after_coupon = ($total * $coupon_number) / 100;
-            $total_coupon = $total - $total_after_coupon;
-        } else {
-            $total_coupon = $total - $coupon_number;
-        }
-
-        $output .= '<tr>
-				<td colspan="2">
-					<p>Tổng giảm: ' . $coupon_echo . '</p>
-					<p>Phí ship: ' . number_format($product->product_feeship, 0, ',', '.') . 'đ' . '</p>
-					<p>Thanh toán : ' . number_format($total_coupon + $product->product_feeship, 0, ',', '.') . 'đ' . '</p>
-				</td>
-		</tr>';
-        $output .= '
-				</tbody>
-
-		</table>
-
-		<p>Ký tên</p>
-			<table>
-				<thead>
-					<tr>
-						<th width="200px">Người lập phiếu</th>
-						<th width="800px">Người nhận</th>
-
-					</tr>
-				</thead>
-				<tbody>';
-
-        $output .= '
-				</tbody>
-
-		</table>
-
-		';
-
-
-        return $output;
-    }
-    public function view_order($order_code)
-    {
-        $order_details = Order_Details::with('product')->where('order_code', $order_code)->get();
-        $order = Order::where('order_code', $order_code)->get();
-        foreach ($order as $key => $ord) {
-            $user_id = $ord->user_id;
-            $shipping_id = $ord->shipping_id;
-            $order_status = $ord->order_status;
-        }
-        $customer = Users::where('user_id', $user_id)->first();
-        $shipping = Shipping::where('shipping_id', $shipping_id)->first();
-
-        $order_details_product = Order_Details::with('product')->where('order_code', $order_code)->get();
-
-        foreach ($order_details_product as $key => $order_d) {
-
-            $product_coupon = $order_d->product_coupon;
-        }
-        if ($product_coupon != 'no') {
-            $coupon = Coupon::where('coupon_code', $product_coupon)->first();
-            $coupon_condition = $coupon->coupon_condition;
-            $coupon_number = $coupon->coupon_number;
-        } else {
-            $coupon_condition = 2;
-            $coupon_number = 0;
-        }
-
-        return view('admin.view_order')->with(compact('order_details', 'customer', 'shipping', 'order_details', 'coupon_condition', 'coupon_number', 'order', 'order_status'));
-    }
-    public function manage_order()
-    {
-        $order = Order::orderby('created_at', 'DESC')->paginate(5);
-        return view('admin.manage_order')->with(compact('order'));
     }
 }

@@ -6,16 +6,14 @@
                 <header class="panel-heading">
                     Cập nhật sản phẩm
                 </header>
+                @if (session('message'))
+                    <script>
+                        toastify().success('{{ session('message') }}');
+                    </script>
+                @endif
                 <div class="panel-body">
                     @foreach ($edit_product as $key => $edit_value)
                         <div class="position-center">
-                            <?php
-                            $message = Session::get('message');
-                            if ($message) {
-                                echo '<div class="text-alert">', $message, '</div>';
-                                Session::put('message', null);
-                            }
-                            ?>
                             <form role="form" action="{{ URL::to('/update-product/' . $edit_value->product_id) }}"
                                 method="post" enctype="multipart/form-data">
                                 {{ csrf_field() }}
@@ -40,10 +38,6 @@
                                     <textarea style="resize:none" rows="8" class="form-control" name="product_desc">{{ $edit_value->product_desc }}</textarea>
                                 </div>
                                 <div class="form-group">
-                                    <label>Nội dung sản phẩm</label>
-                                    <textarea style="resize:none" rows="8" class="form-control" name="product_content">{{ $edit_value->product_content }}</textarea>
-                                </div>
-                                <div class="form-group">
                                     <label>Danh mục sản phẩm</label>
                                     <select name="category_id" class="form-control input-sm m-bot15">
                                         @foreach ($cate_product as $key => $cate)
@@ -53,19 +47,6 @@
                                             @else
                                                 <option value="{{ $cate->category_id }}">{{ $cate->category_name }}
                                                 </option>
-                                            @endif
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Thương hiệu sản phẩm</label>
-                                    <select name="brand_id" class="form-control input-sm m-bot15">
-                                        @foreach ($brand_product as $key => $brand)
-                                            @if ($brand->brand_id == $edit_value->brand_id)
-                                                <option selected value="{{ $brand->brand_id }}">{{ $brand->brand_name }}
-                                                </option>
-                                            @else
-                                                <option value="{{ $brand->brand_id }}">{{ $brand->brand_name }}</option>
                                             @endif
                                         @endforeach
                                     </select>

@@ -1181,6 +1181,9 @@ ol {
 
 .product-item .pi-pic img {
     min-width: 100%;
+    min-height: 255px;
+    max-width: 100%;
+    max-height: 255px;
 }
 
 .product-item .pi-pic .sale {
@@ -1511,7 +1514,6 @@ ol {
 
 .footer-section {
     background: #191919;
-    padding-top: 75px;
 }
 
 .footer-left {

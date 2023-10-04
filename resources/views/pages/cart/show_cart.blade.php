@@ -84,7 +84,7 @@
                 <nav class="nav-menu mobile-menu">
                     <ul>
                         <li><a href="{{ URL::to('/') }}">Trang chủ</a></li>
-                        <li><a href="{{ URL::to('/show-cart') }}">Giỏ hàng</a></li>
+                        <li><a href="{{ URL::to('/show-cart/' . Auth::user()->user_id) }}">Giỏ hàng</a></li>
                         @if (Auth::user())
                             @if (Auth::user() && Auth::user()->user_role === 'QUANTRIVIEN')
                                 <li><a href="{{ URL::to('/dashboard') }}">Trang quản trị</a></li>
@@ -150,19 +150,19 @@
                                             </td>
                                             <td class="qua-col first-row">
                                                 <div class="quantity">
-                                                    <input class="quantityProductCart" id="inputQuantity"
+                                                    <input class="quantityProductCart"
+                                                        id="inputQuantity_{{ $item->cart_detail_id }}"
                                                         style="width: 70px; outline: none; border: 2px solid #333; padding: 5px; text-align: center; border-radius: 5px; color: black; font-size: 16px"
                                                         type="number" value="{{ $item->quantity }}" min="1"
-                                                        max="{{ $item->product_quantity }}
-                                                        ">
+                                                        max="{{ $item->product_quantity }}">
                                                 </div>
                                             </td>
                                             <td class="total-price first-row">
                                                 {{ number_format($item->product_price * $item->quantity) }}
                                             </td>
                                             <td class="close-td first-row">
-                                                <a id="addToCartLink"
-                                                    href="{{ URL::to('/update-cart-detail/' . $item->product_id . '/' . Auth::user()->user_id) . '/' . $item->cart_id . '/' . 1 }}">
+                                                <a id="updateCartLink_{{ $item->cart_detail_id }}" href="#"
+                                                    onclick="updateCartDetail({{ $item->cart_detail_id }})">
                                                     <i class="ti-save"></i>
                                                 </a>
                                             </td>
@@ -203,7 +203,8 @@
                                             <span>{{ number_format($total_price) }} vnđ</span>
                                         </li>
                                     </ul>
-                                    <a href="#" class="proceed-btn">THANH TOÁN</a>
+                                    <a href="{{ URL::to('/show-order/' . Auth::user()->user_id) }}"
+                                        class="proceed-btn">THANH TOÁN</a>
                                 </div>
                             </div>
                         </div>
@@ -223,17 +224,10 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="copyright-text">
-                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                            Copyright &copy;
+                            Được thực hiện bởi nhóm 2 vào năm
                             <script>
                                 document.write(new Date().getFullYear());
-                            </script> All rights reserved | This template is made with <i
-                                class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com"
-                                target="_blank">Colorlib</a>
-                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                        </div>
-                        <div class="payment-pic">
-                            <img src="img/payment-method.png" alt="">
+                            </script>
                         </div>
                     </div>
                 </div>
@@ -254,17 +248,11 @@
     <script src="{{ asset('public/frontend/index/js/owl.carousel.min.js') }}"></script>
     <script src="{{ asset('public/frontend/index/js/main.js') }}"></script>
     <script>
-        var inputQuantity = document.getElementById('inputQuantity');
-        var addToCartLink = document.getElementById('addToCartLink');
-
-        inputQuantity.addEventListener('change', function() {
-            var quantity = inputQuantity.value;
-            console.log(quantity);
-            var href =
-                "{{ URL::to('/update-cart-detail/' . $item->product_id . '/' . Auth::user()->user_id) . '/' . $item->cart_id . '/' }}" +
-                quantity;
-            addToCartLink.href = href;
-        });
+        function updateCartDetail(cartDetailId) {
+            var quantity = document.getElementById('inputQuantity_' + cartDetailId).value;
+            var updateUrl = "{{ URL::to('/update-cart-detail') }}/" + cartDetailId + "/" + quantity;
+            window.location.href = updateUrl;
+        }
     </script>
     <script>
         var inputElements = document.getElementsByClassName("quantityProductCart");

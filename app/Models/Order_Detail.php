@@ -9,7 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class Order_Details extends Model
+class Order_Detail extends Model
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -23,7 +23,6 @@ class Order_Details extends Model
         'product_id',
         'product_name',
         'product_price',
-        'product_feeship',
         'product_quantity',
     ];
 

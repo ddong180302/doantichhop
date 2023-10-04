@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Order;
+use App\Models\Order_Detail;
 use App\Models\QuanHuyen;
 use App\Models\TinhThanhPho;
 use App\Models\Users;
@@ -91,7 +93,7 @@ class UserController extends Controller
                 $user->user_password = Hash::make($user_password);
                 $user->save();
                 Mail::send('admin.user.active_account', compact('user', 'user_password'), function ($email) use ($user) {
-                    $email->subject('Đồ án tích hợp nhóm 4 - Xác Nhận tài khoản');
+                    $email->subject('Đồ án tích hợp nhóm 2 - Xác Nhận tài khoản');
                     $email->to($user->user_email, $user->user_name);
                 });
                 $user_id = $user->user_id;
@@ -121,10 +123,8 @@ class UserController extends Controller
     public function edit_user($user_id)
     {
         $this->AuthLogin();
-        $edit_user = Users::where('user_id', $user_id)->get();
-        $manager_user = view('admin.user.edit_user')->with('edit_user', $edit_user);
-        return view('admin_layout')->with('admin.user.edit_user', $manager_user);
-        return Redirect::to('get-all-user')->with('message', 'Chỉnh sửa thông tin thành công');
+        $edit_user = Users::where('user_id', $user_id)->first();
+        return view('admin.user.edit_user')->with('edit_user', $edit_user);
     }
 
     public function delete_user($user_id)
@@ -145,36 +145,43 @@ class UserController extends Controller
         $data['user_name'] = $request->user_name;
         $data['user_status'] = $request->user_status;
         Users::where('user_id', $user_id)->update($data);
-        Session::put('message', 'Cập nhật người dùng thành công');
-        return Redirect::to('get-all-user');
+        return Redirect::to('get-all-user')->with('message', 'Cập nhật người dùng thành công');
     }
 
     public function show_user_profile($user_id)
     {
         $user =  Users::where('user_id', $user_id)->first();
+        $city = TinhThanhPho::where('matp', $user->matp)->first();
+        $province = QuanHuyen::where('maqh', $user->maqh)->first();
+        $wards = XaPhuongThiTran::where('xaid', $user->xaid)->first();
         $city_province = TinhThanhPho::select('matp', 'name_city', 'type')->get();
-        return view('pages.user.profile')->with('user', $user)->with('city_province', $city_province);
+        return view('pages.user.profile')->with('user', $user)->with('city_province', $city_province)->with('wards', $wards)->with('province', $province)->with('city', $city);
     }
 
-    public function getDistricts($matp)
+    public function select_delivery(Request $request)
     {
-
-        $districts = QuanHuyen::where('matp', $matp)->get();
-
-        return redirect()->back()->with('districts', $districts);
-    }
-
-    public function getWards($maqh)
-    {
-
-        $wards = XaPhuongThiTran::where('maqh', $maqh)->get();
-
-        return redirect()->back()->with('wards', $wards);
+        $data = $request->all();
+        if ($data['action']) {
+            $output = '';
+            if ($data['action'] == "city") {
+                $select_province = QuanHuyen::where('matp', $data['ma_id'])->orderby('maqh', 'ASC')->get();
+                $output .= '<option>---Chọn quận huyện---</option>';
+                foreach ($select_province as $key => $province) {
+                    $output .= '<option value="' . $province->maqh . '">' . $province->name_quanhuyen . '</option>';
+                }
+            } else {
+                $select_wards = XaPhuongThiTran::where('maqh', $data['ma_id'])->orderby('xaid', 'ASC')->get();
+                $output .= '<option>---Chọn xã phường---</option>';
+                foreach ($select_wards as $key => $ward) {
+                    $output .= '<option value="' . $ward->xaid . '">' . $ward->name_xaphuong . '</option>';
+                }
+            }
+            echo $output;
+        }
     }
 
     public function add_avatar(Request $request, $user_id)
     {
-
         $user =  Users::where('user_id', $user_id)->first();
         if ($user && $request->hasFile('user_image')) {
             $get_image = $request->file('user_image');;
@@ -190,5 +197,57 @@ class UserController extends Controller
         } else {
             return redirect()->back()->with('message', 'Bạn cần phải tải hình ảnh');
         }
+    }
+
+    public function update_profile(Request $request, $user_id)
+    {
+        $data = array();
+        $data['user_name'] = $request->user_name;
+        $data['user_phone'] = $request->user_phone;
+        $data['matp'] = intval($request->city);
+        $data['maqh'] = intval($request->province);
+        $data['xaid'] = intval($request->wards);
+        $user =  Users::where('user_id', $user_id)->first();
+        if ($user) {
+            $user->update($data);;
+            return redirect()->back()->with('message', 'Cập nhật thông tin thành công!');
+        } else {
+            return redirect()->back()->with('message', 'Cập nhật thông tin thất bại!');
+        }
+    }
+
+    public function show_order_history($user_id)
+    {
+        $order = Order::where('user_id', $user_id)->get();
+        foreach ($order as $item) {
+            $order_detail = Order_Detail::where('order_id', $item->order_id)->get();
+        }
+        return view('pages.user.order_history', compact('order', 'order_detail'));
+    }
+
+    public function show_change_password_user($user_id)
+    {
+        $user = Users::where('user_id', $user_id)->first();
+        return view('pages.user.change_password', compact('user'));
+    }
+
+
+    public function change_password_user(Request $request, $user_id)
+    {
+        $user = Users::where('user_id', $user_id)->first();
+
+        if (Hash::check($request->user_password, $user->user_password)) {
+            $user->update(['user_password' => Hash::make($request->user_new_password)]);
+            return Redirect::to('/login')->with('message', 'Đổi mật khẩu thành công, bạn có thể đăng nhập');
+        } else {
+            return redirect()->back()->with('message', 'Đổi mật khẩu thất bại, mật khẩu cũ của bạn không đúng!');
+        }
+    }
+
+    public function search_users(Request $request)
+    {
+        $key_users = $request->key_users;
+        $search_users = Users::where('user_name', 'like', '%' . $key_users . '%')->paginate(4);
+        return view('admin.user.search_users')->with('message', 'Các sản phẩm bạn muốn tìm')->with('search_users', $search_users);
     }
 }

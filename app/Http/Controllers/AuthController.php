@@ -71,7 +71,7 @@ class AuthController extends Controller
                 $user->user_role = "NGUOIDUNG";
                 $user->save();
                 Mail::send('pages.active_account', compact('user'), function ($email) use ($user) {
-                    $email->subject('Đồ án tích hợp nhóm 4 - Xác Nhận tài khoản');
+                    $email->subject('Đồ án tích hợp nhóm 2 - Xác Nhận tài khoản');
                     $email->to($user->user_email, $user->user_name);
                 });
                 $user_id = $user->user_id;
@@ -159,7 +159,7 @@ class AuthController extends Controller
             if ($user) {
                 $user->update(['user_token' => $user_token]);
                 Mail::send('pages.send_m_forgot_password', compact('user'), function ($email) use ($user) {
-                    $email->subject('Đồ án tích hợp nhóm 4 - Xác Nhận tài khoản');
+                    $email->subject('Đồ án tích hợp nhóm 2 - Xác Nhận tài khoản');
                     $email->to($user->user_email, $user->user_name);
                 });
                 $user_id = $user->user_id;
@@ -170,7 +170,7 @@ class AuthController extends Controller
         }
     }
 
-    public function show_forgot(Request $request, $user_id)
+    public function show_forgot($user_id)
     {
         return view('pages.forgot_actived')->with('user_id', $user_id);
     }
@@ -195,7 +195,6 @@ class AuthController extends Controller
 
     public function change_password(Request $request, $user_id)
     {
-        //if ($request->user_password === $request->confirm_password) {
         $user = Users::where('user_id',  $user_id)->first();
         if ($user) {
             $user->update(['user_password' => Hash::make($request->user_password)]);
@@ -203,8 +202,5 @@ class AuthController extends Controller
         } else {
             return redirect()->back()->with('error', 'Đổi mật khẩu thất bại!');
         }
-        //} else {
-        //   return redirect()->back()->with('message', 'Mật khẩu xác nhận không đúng!');
-        //}
     }
 }

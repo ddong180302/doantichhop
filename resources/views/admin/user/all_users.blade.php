@@ -1,18 +1,35 @@
 @extends('admin_layout')
 @section('admin_content')
+    @if (session('message'))
+        <script>
+            toastify().success('{{ session('message') }}');
+        </script>
+    @endif
     <div class="table-agile-info">
         <div class="panel panel-default">
             <div class="panel-heading">
                 Liệt kê users
             </div>
-            <div class="table-responsive">
-                <?php
-                $message = Session::get('message');
-                if ($message) {
-                    echo '<span class="text-alert">' . $message . '</span>';
-                    Session::put('message', null);
-                }
-                ?>
+            <div class="row w3-res-tb" style="margin-bottom: 30px">
+                <div class="col-sm-7 m-b-xs">
+                </div>
+                <div class="col-sm-5">
+                    <form action="{{ URL::to('/search-users') }}" method="POST">
+                        {{ csrf_field() }}
+                        <div style="width: 100%; display: flex; flex-direction: row">
+                            <div style="width: 80%">
+                                <input type="text" name="key_users" class="input-sm form-control"
+                                    placeholder="Tìm kiếm theo tên">
+                            </div>
+                            <div style="width: 20%;">
+                                <button class="btn btn-sm btn-default" name="btn_user" type="button"
+                                    onclick="searchUsers()"><i class="fa fa-search"></i></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="table-responsive" id="table-users-container">
                 <table class="table table-striped b-t b-light">
                     <thead>
                         <tr>
@@ -54,8 +71,8 @@
                                         <i class="fa fa-pencil-square-o text-success text-active"></i>
                                     </a>
                                     <a onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này không?')"
-                                        href="{{ URL::to('/delete-user/' . $user->user_id) }}" class="active styling-delete"
-                                        ui-toggle-class="">
+                                        href="{{ URL::to('/delete-user/' . $user->user_id) }}"
+                                        class="active styling-delete" ui-toggle-class="">
                                         <i class="fa fa-times text-danger text"></i>
                                     </a>
                                 </td>

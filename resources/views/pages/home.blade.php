@@ -38,4 +38,9 @@
             </div>
         </div>
     @endforeach
+    <footer class="panel-footer">
+        <div class="clearfix">
+            {{ $all_product->links() }}
+        </div>
+    </footer>
 @endsection

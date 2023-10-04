@@ -46,6 +46,9 @@ class CartController extends Controller
                 } else {
                     $cartDetail = new CartDetail();
                     $cartDetail->cart_id = $cart_id;
+                    $cartDetail->image = $product->product_image;
+                    $cartDetail->name = $product->product_name;
+                    $cartDetail->price = $product->product_price;
                     $cartDetail->product_id = $product_id;
                     $cartDetail->quantity += $detail_quantity;
                     $cartDetail->save();
@@ -62,6 +65,9 @@ class CartController extends Controller
                 // Lưu thông tin vào bảng "CartDetail"
                 $cartDetail = new CartDetail();
                 $cartDetail->cart_id = $cart_id;
+                $cartDetail->image = $product->product_image;
+                $cartDetail->name = $product->product_name;
+                $cartDetail->price = $product->product_price;
                 $cartDetail->product_id = $product_id;
                 $cartDetail->quantity += $detail_quantity;
                 $cartDetail->save();
@@ -96,6 +102,9 @@ class CartController extends Controller
                 } else {
                     $cartDetail = new CartDetail();
                     $cartDetail->cart_id = $cart_id;
+                    $cartDetail->image = $product->product_image;
+                    $cartDetail->name = $product->product_name;
+                    $cartDetail->price = $product->product_price;
                     $cartDetail->product_id = $product_id;
                     $cartDetail->quantity += 1;
                     $cartDetail->save();
@@ -112,6 +121,9 @@ class CartController extends Controller
                 // Lưu thông tin vào bảng "CartDetail"
                 $cartDetail = new CartDetail();
                 $cartDetail->cart_id = $cart_id;
+                $cartDetail->image = $product->product_image;
+                $cartDetail->name = $product->product_name;
+                $cartDetail->price = $product->product_price;
                 $cartDetail->product_id = $product_id;
                 $cartDetail->quantity += 1;
                 $cartDetail->save();
@@ -122,7 +134,7 @@ class CartController extends Controller
         }
     }
 
-    public function delete_item_cart(Request $request, $product_id, $user_id, $cart_id, $cart_detail_id)
+    public function delete_item_cart($product_id, $user_id, $cart_id, $cart_detail_id)
     {
         $product = Product::where('product_id', $product_id)->first();
         $user = Users::where('user_id', $user_id)->first();
@@ -149,14 +161,11 @@ class CartController extends Controller
         return view('pages.cart.show_cart')->with('category', $cate_product)->with('cart', $cart)->with('count_product', $count_product)->with('total_price', $total_price);
     }
 
-    public function update_cart_detail($product_id, $user_id, $cart_id, $quantity)
+    public function update_cart_detail($cart_detail_id, $quantity)
     {
-        $product = Product::where('product_id', $product_id)->first();
-        $user = Users::where('user_id', $user_id)->first();
-        $cart = Cart::where('cart_id', $cart_id)->first();
-        $cart_detail = CartDetail::where('cart_id', $cart_id)->where('product_id', $product_id)->first();
+        $cart_detail = CartDetail::where('cart_detail_id', $cart_detail_id)->first();
 
-        if ($user && $product && $cart_detail && $cart && $quantity) {
+        if ($cart_detail  && $quantity) {
             $cart_detail->quantity = $quantity;
             $cart_detail->update();
             return redirect()->back()->with('message', 'Cập nhật số lượng thành công!');

@@ -128,6 +128,78 @@
             padding: 5px;
             width: 100%;
         }
+
+        .profile-layout .profile-info .address {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .profile-layout .profile-info .address .address-name {
+            margin-right: 10px;
+        }
+
+        .profile-layout .profile-info .address .address-name .title-info {
+            padding-bottom: 5px;
+            text-align: center;
+            align-items: center;
+        }
+
+        .profile-layout .change-password {
+            width: 60%;
+            margin: 0 auto;
+            padding: 20px;
+            border-radius: 10px;
+            background: #87eec1;
+        }
+
+        .profile-layout .change-password .change-title {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            width: 100%;
+            padding: 10px 0;
+        }
+
+        .profile-layout .change-password .title {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            padding: 20px 0;
+            display: flex;
+            justify-content: center
+        }
+
+        .profile-layout .change-password .change-title .title-info {
+            width: 40%;
+        }
+
+        .profile-layout .change-password .change-title .title-info .label {
+            font-family: sans-serif;
+            font-size: 20px;
+        }
+
+        .profile-layout .change-password .change-title .info-name {
+            width: 60%;
+        }
+
+        .profile-layout .change-password .change-title .info-name .input {
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            padding: 5px;
+            width: 100%;
+            position: relative;
+        }
+
+        .profile-layout .change-password .change-title .info-name .show-password {
+            font-size: 20px;
+            position: absolute;
+            transform: translate(-180%, 50%);
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -173,8 +245,9 @@
             <div class="container">
                 <nav class="nav-menu mobile-menu">
                     <ul>
-                        <li><a href="{{ URL::to('/') }}">Trang chủ</a></li>
-                        <li><a href="{{ URL::to('/show-cart') }}">Giỏ hàng</a></li>
+                        <li><a href="{{ URL::to('/show-user-profile/' . Auth::user()->user_id) }}">Trang cá nhân</a>
+                        </li>
+                        <li><a href="{{ URL::to('/show-cart/' . Auth::user()->user_id) }}">Giỏ hàng</a></li>
                         @if (Auth::user())
                             @if (Auth::user() && Auth::user()->user_role === 'QUANTRIVIEN')
                                 <li><a href="{{ URL::to('/dashboard') }}">Trang quản trị</a></li>
@@ -182,12 +255,14 @@
                         @endif
                         @if (Auth::user())
                             <li>
-                                <a href="{{ URL::to('/show-user-profile/' . Auth::user()->user_id) }}">
+                                <a href="{{ URL::to('/show-order-history/' . Auth::user()->user_id) }}">
                                     Lịch sử mua hàng
                                 </a>
                             </li>
                         @endif
-                        <li><a href="#">Đổi mật khẩu</a></li>
+                        <li><a href="{{ URL::to('/show-change-password-user/' . Auth::user()->user_id) }}">Đổi mật
+                                khẩu</a>
+                        </li>
                     </ul>
                 </nav>
                 <div id="mobile-menu-wrap"></div>
@@ -220,81 +295,22 @@
 
     <!-- Footer Section Begin -->
     <footer class="footer-section">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3">
-                    <div class="footer-left">
-                        <div class="footer-logo">
-                            <a href="#"><img src="img/footer-logo.png" alt=""></a>
-                        </div>
-                        <ul>
-                            <li>Address: Duy Tân - Đà Nẵng</li>
-                            <li>Phone: +84 932562365</li>
-                            <li>Email: trandangdong1803@gmail.com</li>
-                        </ul>
-                        <div class="footer-social">
-                            <a href="#"><i class="fa fa-facebook"></i></a>
-                            <a href="#"><i class="fa fa-instagram"></i></a>
-                            <a href="#"><i class="fa fa-twitter"></i></a>
-                            <a href="#"><i class="fa fa-pinterest"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-2 offset-lg-1">
-                    <div class="footer-widget">
-                        <h5>Information</h5>
-                        <ul>
-                            <li><a href="#">About Us</a></li>
-                            <li><a href="#">Checkout</a></li>
-                            <li><a href="#">Contact</a></li>
-                            <li><a href="#">Serivius</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-2">
-                    <div class="footer-widget">
-                        <h5>My Account</h5>
-                        <ul>
-                            <li><a href="#">My Account</a></li>
-                            <li><a href="#">Contact</a></li>
-                            <li><a href="#">Shopping Cart</a></li>
-                            <li><a href="#">Shop</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="newslatter-item">
-                        <h5>Join Our Newsletter Now</h5>
-                        <p>Get E-mail updates about our latest shop and special offers.</p>
-                        <form action="#" class="subscribe-form">
-                            <input type="text" placeholder="Enter Your Mail">
-                            <button type="button">Subscribe</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="copyright-reserved">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div class="copyright-text">
-                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                            Copyright &copy;
-                            <script>
-                                document.write(new Date().getFullYear());
-                            </script> All rights reserved | This
-                            template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a
-                                href="https://www.facebook.com" target="_blank">facebook</a>
-                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                        </div>
-                        <div class="payment-pic">
-                            <img src="img/payment-method.png" alt="">
+        <footer class="footer-section">
+            <div class="copyright-reserved">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="copyright-text">
+                                Được thực hiện bởi nhóm 2 vào năm
+                                <script>
+                                    document.write(new Date().getFullYear());
+                                </script>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </footer>
     </footer>
     <!-- Footer Section End -->
 
@@ -350,51 +366,108 @@
             }
         }
     </script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
+    <script type="text/javascript">
         $(document).ready(function() {
-            var cityProvinceSelect = $('#city_province');
-            var districtSelect = $('#district');
-            var wardsSelect = $('#wards');
-            cityProvinceSelect.on('change', function() {
-                var selectedCityProvince = $(this).val();
+            //fetch_delivery();
+            $('.choose').on('change', function() {
+                var action = $(this).attr('id');
+                var ma_id = $(this).val();
+                var _token = $('input[name="_token"]').val();
+                var result = '';
+                if (action == 'city') {
+                    result = 'province';
+                } else {
+                    result = 'wards';
+                }
                 $.ajax({
-                    url: '/get-districts/' + cityProvinceSelect,
-                    type: 'GET',
+                    url: '{{ url('/select-delivery') }}',
+                    method: 'POST',
                     data: {
-                        _token: '{{ csrf_token() }}',
-                        cityProvince: selectedCityProvince
+                        action: action,
+                        ma_id: ma_id,
+                        _token: _token
                     },
-                    success: function(response) {
-                        districtSelect.empty();
-                        wardsSelect.empty();
-
-                        response.forEach(function(district) {
-                            districtSelect.append('<option value="' + district.maqh +
-                                '">' + district.name_quanhuyen + '</option>');
-                        });
+                    success: function(data) {
+                        $('#' + result).html(data);
                     }
                 });
             });
+        })
+    </script>
+    <script>
+        // Lấy các phần tử form và nút điều khiển
+        const viewForm = document.getElementById('viewForm');
+        const editForm = document.getElementById('editForm');
+        const editButton = document.getElementById('editButton');
+        const cancelButton = document.getElementById('cancelButton');
 
-            districtSelect.on('change', function() {
-                var selectedDistrict = $(this).val();
-                $.ajax({
-                    url: '/get-wards/' + selectedDistrict,
-                    type: 'GET',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                        district: selectedDistrict
-                    },
-                    success: function(response) {
-                        wardsSelect.empty();
-                        response.forEach(function(wards) {
-                            wardsSelect.append('<option value="' + wards.xaid + '">' +
-                                wards.name_xaphuong + '</option>');
-                        });
-                    }
-                });
-            });
+        // Xử lý sự kiện khi nhấn nút "Thay đổi thông tin"
+        editButton.addEventListener('click', function() {
+            viewForm.style.display = 'none';
+            editForm.style.display = 'block';
+        });
+
+        // Xử lý sự kiện khi nhấn nút "Hủy"
+        cancelButton.addEventListener('click', function() {
+            viewForm.style.display = 'block';
+            editForm.style.display = 'none';
+        });
+    </script>
+
+    <script>
+        const passwordInput1 = document.getElementById('passwordInput1');
+        const togglePassword1 = document.getElementById('togglePassword1');
+
+
+
+        togglePassword1.addEventListener('click', function() {
+            const type = passwordInput1.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput1.setAttribute('type', type);
+            togglePassword1.classList.toggle('fa-eye-slash');
+        });
+    </script>
+
+    <script>
+        const passwordInput2 = document.getElementById('passwordInput2');
+        const togglePassword2 = document.getElementById('togglePassword2');
+
+        togglePassword2.addEventListener('click', function() {
+            const type = passwordInput2.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput2.setAttribute('type', type);
+            togglePassword2.classList.toggle('fa-eye-slash');
+        });
+    </script>
+
+    <script>
+        const passwordInput3 = document.getElementById('passwordInput3');
+        const togglePassword3 = document.getElementById('togglePassword3');
+
+        togglePassword3.addEventListener('click', function() {
+            const type = passwordInput3.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput3.setAttribute('type', type);
+            togglePassword3.classList.toggle('fa-eye-slash');
+        });
+    </script>
+
+    <script>
+        document.querySelector('form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Ngăn chặn chuyển hướng mặc định khi submit form
+
+            // Lấy giá trị của các trường mật khẩu
+            var passwordInput2 = document.getElementById('passwordInput2').value;
+            var passwordInput3 = document.getElementById('passwordInput3').value;
+
+            // Kiểm tra mật khẩu nhập lại có khớp với mật khẩu mới hay không
+            if (passwordInput2 !== passwordInput3) {
+                // Mật khẩu nhập lại không khớp, hiển thị thông báo hoặc thực hiện hành vi tương ứng
+                alert('Mật khẩu nhập lại không khớp. Vui lòng nhập lại!');
+                document.getElementById('passwordInput2').value = ''; // Xóa giá trị trường mật khẩu mới
+                document.getElementById('passwordInput3').value = ''; // Xóa giá trị trường xác thực mật khẩu mới
+                document.getElementById('passwordInput2').focus(); // Focus vào trường mật khẩu mới
+            } else {
+                // Mật khẩu nhập lại khớp, tiếp tục chuyển hướng đến URL /change-password
+                this.submit();
+            }
         });
     </script>
 </body>

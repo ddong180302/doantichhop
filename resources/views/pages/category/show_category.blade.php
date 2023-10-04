@@ -68,7 +68,7 @@
                     <div class="col-lg-2 col-md-2">
                         <div class="logo">
                             <a href="#">
-                                <img src="img/logo.png" alt="">
+                                <img src="" alt="">
                             </a>
                         </div>
                     </div>
@@ -87,7 +87,7 @@
                         <ul class="nav-right">
                             <li class="cart-icon">
                                 @if (Auth::user())
-                                    <a href="{{ URL::to('/show-cart') }}">
+                                    <a href="{{ URL::to('/show-cart/' . Auth::user()->user_id) }}">
                                         <i class="icon_bag_alt"></i>
                                         @if ($count_product)
                                             <span id="total-quantity-show">
@@ -98,7 +98,7 @@
                                         @endif
                                     </a>
                                 @else
-                                    <a href="{{ URL::to('/show-cart') }}">
+                                    <a href="{{ URL::to('/login') }}">
                                         <i class="icon_bag_alt"></i>
                                     </a>
                                 @endif
@@ -141,7 +141,8 @@
                                             @endif
                                         </div>
                                         <div class="select-button">
-                                            <a href="{{ URL::to('/show-cart') }}" class="primary-btn view-card">
+                                            <a href="{{ URL::to('/show-cart/' . Auth::user()->user_id) }}"
+                                                class="primary-btn view-card">
                                                 XEM GIỎ HÀNG
                                             </a>
                                             <a href="#" class="primary-btn checkout-btn">THANH TOÁN</a>
@@ -179,13 +180,13 @@
                 <nav class="nav-menu mobile-menu">
                     <ul>
                         <li><a href="{{ URL::to('/') }}">Trang chủ</a></li>
-                        <li><a href="{{ URL::to('/show-cart') }}">Giỏ hàng</a></li>
                         @if (Auth::user())
                             @if (Auth::user() && Auth::user()->user_role === 'QUANTRIVIEN')
                                 <li><a href="{{ URL::to('/dashboard') }}">Trang quản trị</a></li>
                             @endif
                         @endif
                         @if (Auth::user())
+                            <li><a href="{{ URL::to('/show-cart/' . Auth::user()->user_id) }}">Giỏ hàng</a></li>
                             <li><a href="#">Trang cá nhân</a></li>
                         @endif
                         <li><a href="#">Contact</a></li>
@@ -264,76 +265,15 @@
         </div>
     </section>
     <footer class="footer-section">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-3">
-                    <div class="footer-left">
-                        <div class="footer-logo">
-                            <a href="#"><img src="img/footer-logo.png" alt=""></a>
-                        </div>
-                        <ul>
-                            <li>Address: Duy Tân - Đà Nẵng</li>
-                            <li>Phone: +84 932562365</li>
-                            <li>Email: trandangdong1803@gmail.com</li>
-                        </ul>
-                        <div class="footer-social">
-                            <a href="#"><i class="fa fa-facebook"></i></a>
-                            <a href="#"><i class="fa fa-instagram"></i></a>
-                            <a href="#"><i class="fa fa-twitter"></i></a>
-                            <a href="#"><i class="fa fa-pinterest"></i></a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-2 offset-lg-1">
-                    <div class="footer-widget">
-                        <h5>Information</h5>
-                        <ul>
-                            <li><a href="#">About Us</a></li>
-                            <li><a href="#">Checkout</a></li>
-                            <li><a href="#">Contact</a></li>
-                            <li><a href="#">Serivius</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-2">
-                    <div class="footer-widget">
-                        <h5>My Account</h5>
-                        <ul>
-                            <li><a href="#">My Account</a></li>
-                            <li><a href="#">Contact</a></li>
-                            <li><a href="#">Shopping Cart</a></li>
-                            <li><a href="#">Shop</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-4">
-                    <div class="newslatter-item">
-                        <h5>Join Our Newsletter Now</h5>
-                        <p>Get E-mail updates about our latest shop and special offers.</p>
-                        <form action="#" class="subscribe-form">
-                            <input type="text" placeholder="Enter Your Mail">
-                            <button type="button">Subscribe</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
         <div class="copyright-reserved">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="copyright-text">
-                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                            Copyright &copy;
+                            Được thực hiện bởi nhóm 2 vào năm
                             <script>
                                 document.write(new Date().getFullYear());
-                            </script> All rights reserved | This
-                            template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a
-                                href="https://www.facebook.com" target="_blank">facebook</a>
-                            <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                        </div>
-                        <div class="payment-pic">
-                            <img src="img/payment-method.png" alt="">
+                            </script>
                         </div>
                     </div>
                 </div>

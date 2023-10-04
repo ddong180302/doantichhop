@@ -6,13 +6,13 @@
                 <header class="panel-heading">
                     Thêm danh mục sản phẩm
                 </header>
+                @if (session('message'))
+                    <script>
+                        toastify().success('{{ session('message') }}');
+                    </script>
+                @endif
                 <div class="panel-body">
                     <div class="position-center">
-                        @if (session('message'))
-                            <script>
-                                toastify().success('{{ session('message') }}');
-                            </script>
-                        @endif
                         <form role="form" action="{{ URL::to('/save-category-product') }}" method="post">
                             {{ csrf_field() }}
                             <div class="form-group">
