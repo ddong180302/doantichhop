@@ -39,6 +39,9 @@ Route::post('/update-category-product/{category_product_id}', [CategoryProduct::
 
 Route::get('/delete-category-product/{category_product_id}', [CategoryProduct::class, 'delete_category_product']);
 Route::post('/search-cate', [CategoryProduct::class, 'search_cate']);
+Route::get('/filter-category', [CategoryProduct::class, 'filter_category']);
+
+
 
 
 
@@ -53,6 +56,11 @@ Route::get('/active-product/{product_id}', [ProductController::class, 'active_pr
 Route::post('/save-product', [ProductController::class, 'save_product']);
 Route::post('/update-product/{product_id}', [ProductController::class, 'update_product']);
 Route::post('/search-product', [ProductController::class, 'search_product']);
+
+
+Route::get('/filter', [ProductController::class, 'filter']);
+Route::get('/filter-product', [ProductController::class, 'filter_product']);
+
 
 
 

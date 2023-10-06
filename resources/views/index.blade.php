@@ -24,6 +24,39 @@
     <link rel="stylesheet" href="{{ asset('public/frontend/index/css/style.css') }}" type="text/css">
     @toastifyCss
     @toastifyJs
+
+    <style>
+        #pagination-container nav {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        #pagination-container nav .hidden {
+            display: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        #pagination-container nav .hidden .relative {
+            font-size: 14px !important;
+        }
+
+        #pagination-container nav .hidden .relative a {
+            font-size: 14px !important;
+        }
+
+        #pagination-container nav .hidden .relative a svg {
+            font-size: 14px !important;
+            width: 20px !important;
+        }
+
+        #pagination-container svg {
+            width: 20px !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -229,9 +262,7 @@
             <div class="row">
                 <div class="col-lg-12 order-1 order-lg-2">
                     <div class="product-list">
-                        <div class="row">
-                            @yield('content')
-                        </div>
+                        @yield('content')
                     </div>
                 </div>
             </div>
@@ -272,12 +303,23 @@
     <script>
         var inputElement = document.getElementById('inputQuantity');
         inputElement.addEventListener('input', function() {
+            var regex = /^[0-9]+$/;
+            var isValid = regex.test(input.value);
+            if (!isValid) {
+                toastify().warning(`Vui lòng chỉ nhập số.`);
+                input.value = "";
+            }
             var inputValue = parseInt(inputElement.value);
             var max = parseInt(inputElement.getAttribute('max'));
 
             if (inputValue > max) {
                 inputElement.value = max; // Đặt giá trị thành giá trị max nếu vượt quá
                 toastify().warning(`Số lượng vượt quá ${max}`);
+            }
+
+            if (inputValue < 1) {
+                inputValue = inputValue; // Đặt giá trị thành giá trị max nếu vượt quá
+                toastify().warning(`Số lượng không được nhỏ hơn 1`);
             }
         });
     </script>
@@ -312,12 +354,33 @@
             });
         }
 
-
         function RenderCart(response) {
             $("#change-item-cart").empty();
             $("#change-item-cart").html(response);
             $("#total-quantity-show").text($("#total-quantity-cart").val());
         }
+    </script>
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#filter-option').on('change', function() {
+                var url = $(this).val();
+                if (url) {
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        success: function(data) {
+                            $('#product-list').html(data);
+                        },
+                        error: function() {
+                            alert('Đã xảy ra lỗi. Vui lòng thử lại sau.');
+                        }
+                    });
+                }
+                return false;
+            });
+        });
     </script>
 </body>
 

@@ -13,7 +13,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($search_product as $key => $product)
+            @foreach ($filtered_products as $key => $product)
                 <tr>
                     <td style="text-align: center; align-items: center">{{ $product->product_id }}</td>
                     <td style="text-align: center; align-items: center">{{ $product->product_name }}</td>

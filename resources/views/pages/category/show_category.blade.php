@@ -221,8 +221,11 @@
             <div class="row">
                 <div class="col-lg-12 order-1 order-lg-2">
                     <div class="product-list">
-                        <h2 class="title text-center">{{ $category_name->category_name }}</h2>
-                        <div class="row">
+                        <div class="row"
+                            style="padding-bottom: 30px; text-align: center; align-items: center; display: flex; justify-content: center; border-bottom: 1px solid #ddd">
+                            <h2 class="title text-center">{{ $category_name->category_name }}</h2>
+                        </div>
+                        <div class="row" style="padding-top: 30px">
                             @foreach ($category_by_id as $key => $product)
                                 <div class="col-lg-4 col-sm-6">
                                     <div class="product-item">

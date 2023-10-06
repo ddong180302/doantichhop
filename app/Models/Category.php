@@ -34,6 +34,11 @@ class Category extends Model
     protected $table = 'tbl_category_product';
     protected $hidden = [];
 
+    public function product()
+    {
+        return $this->hasMany('App\Models\Product');
+    }
+
     /**
      * The attributes that should be cast.
      *

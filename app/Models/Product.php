@@ -39,6 +39,11 @@ class Product extends Model
     protected $table = 'tbl_product';
     protected $hidden = [];
 
+    public function category()
+    {
+        return $this->belongsTo('App\Models\Category', 'category_id');
+    }
+
     /**
      * The attributes that should be cast.
      *

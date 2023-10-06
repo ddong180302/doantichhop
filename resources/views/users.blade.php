@@ -153,7 +153,6 @@
             margin: 0 auto;
             padding: 20px;
             border-radius: 10px;
-            background: #87eec1;
         }
 
         .profile-layout .change-password .change-title {

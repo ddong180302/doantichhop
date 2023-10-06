@@ -190,6 +190,49 @@ Author: NHóm 4
     <script src="{{ asset('public/backend/js/jquery.nicescroll.js') }}"></script>
     <script src="{{ asset('public/backend/ckeditor/ckeditor.js') }}"></script>
 
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#filter-product').on('change', function() {
+                var url = $(this).val();
+                if (url) {
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        success: function(data) {
+                            $('#table-container').html(data);
+                        },
+                        error: function(error) {
+                            alert(error);
+                        }
+                    });
+                }
+                return false;
+            });
+        });
+    </script>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#filter-category').on('change', function() {
+                var url = $(this).val();
+                if (url) {
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        success: function(data) {
+                            $('#table-category-container').html(data);
+                        },
+                        error: function(error) {
+                            alert(error);
+                        }
+                    });
+                }
+                return false;
+            });
+        });
+    </script>
+
+
     <script>
         function searchProduct() {
             // Lấy giá trị từ ô input tìm kiếm
@@ -203,7 +246,6 @@ Author: NHóm 4
                     document.getElementById('table-container').innerHTML = this.responseText;
                 }
             };
-
             // Tạo dữ liệu yêu cầu
             var data = new FormData();
             data.append('key_product', keyProduct);

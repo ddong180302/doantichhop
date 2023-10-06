@@ -12,6 +12,16 @@
             </div>
             <div class="row w3-res-tb" style="margin-bottom: 30px">
                 <div class="col-sm-7 m-b-xs">
+                    <form action="">
+                        @csrf
+                        <select name="filter_category" id="filter-category"
+                            style="padding: 10px; border: 1px solid #333; border-radius: 5px">
+                            <option>--Lọc Theo--</option>
+                            <option value="{{ URL::to('/filter-category') }}?sort_by=moinhat">Mới Nhất</option>
+                            <option value="{{ URL::to('/filter-category') }}?sort_by=tuA_Z">Từ A-Z</option>
+                            <option value="{{ URL::to('/filter-category') }}?sort_by=tuZ_A">Từ Z-A</option>
+                        </select>
+                    </form>
                 </div>
                 <div class="col-sm-5">
                     <form action="{{ URL::to('/search-cate') }}" method="POST">

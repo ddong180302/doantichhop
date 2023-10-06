@@ -2,14 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Coupon;
 use App\Models\Payment;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Gloudemans\Shoppingcart\Facades\Cart;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Redirect;
 
 

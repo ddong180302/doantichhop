@@ -156,6 +156,89 @@ class ProductController extends Controller
         return view('admin.product.search_product')->with('message', 'Các sản phẩm bạn muốn tìm')->with('search_product', $search_product);
     }
 
+
+    public function filter()
+    {
+        if (Auth::user()) {
+            $count_product = Cart::where('user_id', Auth::user()->user_id)->join('tbl_cart_detail', 'tbl_cart_detail.cart_id', '=', 'tbl_cart.cart_id')->join('tbl_product', 'tbl_product.product_id', '=', 'tbl_cart_detail.product_id')->count();
+            $cart = Cart::where('user_id', Auth::user()->user_id)->join('tbl_cart_detail', 'tbl_cart_detail.cart_id', '=', 'tbl_cart.cart_id')->join('tbl_product', 'tbl_product.product_id', '=', 'tbl_cart_detail.product_id')->get();
+            $total_price = 0;
+            foreach ($cart as $item) {
+                $total_price += $item->quantity * $item->product_price;
+            }
+            $category = Category::where('category_status', '1')->orderByDesc('category_id')->get();
+
+
+            if (isset($_GET['sort_by'])) {
+                $sort_by = $_GET['sort_by'];
+                $filtered_products = $this->getFilteredProducts($sort_by);
+            }
+
+
+            return view('pages.filter_home', compact('filtered_products', 'count_product', 'cart', 'total_price', 'category'));
+        } else {
+            if (isset($_GET['sort_by'])) {
+                $sort_by = $_GET['sort_by'];
+                $filtered_products = $this->getFilteredProducts($sort_by);
+            }
+            $category = Category::where('category_status', '1')->orderByDesc('category_id')->get();
+            return view('pages.filter_home', compact('filtered_products', 'category'));
+        }
+    }
+
+
+    private function getFilteredProducts($sort_by)
+    {
+        if ($sort_by === 'moinhat') {
+            $filtered_products = Product::orderBy('created_at', 'desc')->paginate(9);
+        } elseif ($sort_by === 'tuA_Z') {
+            $filtered_products = Product::orderBy('product_name', 'asc')->paginate(9);
+        } elseif ($sort_by === 'tuZ_A') {
+            $filtered_products = Product::orderBy('product_name', 'desc')->paginate(9);
+        } elseif ($sort_by === 'tangdan') {
+            $filtered_products = Product::orderBy('product_price', 'asc')->paginate(9);
+        } elseif ($sort_by === 'giamdan') {
+            $filtered_products = Product::orderBy('product_price', 'desc')->paginate(9);
+        } elseif ($sort_by === 'banchay') {
+            $filtered_products = Product::orderBy('product_sold', 'desc')->paginate(9);
+        }
+
+        return $filtered_products;
+    }
+
+
+
+    public function filter_product()
+    {
+        if (isset($_GET['sort_by'])) {
+            $sort_by = $_GET['sort_by'];
+            $filtered_products = $this->getFilteredProductsAdmin($sort_by);
+        }
+        return view('admin.product.filter_product', compact('filtered_products'));
+    }
+
+
+    private function getFilteredProductsAdmin($sort_by)
+    {
+        if ($sort_by === 'moinhat') {
+            $filtered_products = Product::orderBy('created_at', 'asc')->join('tbl_category_product', 'tbl_category_product.category_id', '=', 'tbl_product.category_id')->paginate(4);
+        } elseif ($sort_by === 'tuA_Z') {
+            $filtered_products = Product::orderBy('product_name', 'asc')->join('tbl_category_product', 'tbl_category_product.category_id', '=', 'tbl_product.category_id')->paginate(4);
+        } elseif ($sort_by === 'tuZ_A') {
+            $filtered_products = Product::orderBy('product_name', 'desc')->join('tbl_category_product', 'tbl_category_product.category_id', '=', 'tbl_product.category_id')->paginate(4);
+        } elseif ($sort_by === 'tangdan') {
+            $filtered_products = Product::orderBy('product_price', 'asc')->join('tbl_category_product', 'tbl_category_product.category_id', '=', 'tbl_product.category_id')->paginate(4);
+        } elseif ($sort_by === 'giamdan') {
+            $filtered_products = Product::orderBy('product_price', 'desc')->join('tbl_category_product', 'tbl_category_product.category_id', '=', 'tbl_product.category_id')->paginate(4);
+        } elseif ($sort_by === 'banchay') {
+            $filtered_products = Product::orderBy('product_sold', 'desc')->join('tbl_category_product', 'tbl_category_product.category_id', '=', 'tbl_product.category_id')->paginate(4);
+        }
+
+        return $filtered_products;
+    }
+
+
+
     public function add_specifications(Request $request)
     {
         $this->AuthLogin();

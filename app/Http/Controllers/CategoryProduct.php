@@ -5,12 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Cart;
 use App\Models\Category;
 use App\Models\Product;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Session;
 
 class CategoryProduct extends Controller
 {
@@ -123,5 +120,28 @@ class CategoryProduct extends Controller
         $key_cate = $request->key_cate;
         $search_cate = Category::where('category_name', 'like', '%' . $key_cate . '%')->paginate(4);
         return view('admin.category.search_category')->with('message', 'Các sản phẩm bạn muốn tìm')->with('search_cate', $search_cate);
+    }
+
+    public function filter_category()
+    {
+        if (isset($_GET['sort_by'])) {
+            $sort_by = $_GET['sort_by'];
+            $filter_category = $this->getFilterCategory($sort_by);
+        }
+        return view('admin.category.filter_category', compact('filter_category'));
+    }
+
+
+    private function getFilterCategory($sort_by)
+    {
+        if ($sort_by === 'moinhat') {
+            $filter_category = Category::orderBy('created_at', 'desc')->paginate(4);
+        } elseif ($sort_by === 'tuA_Z') {
+            $filter_category = Category::orderBy('category_name', 'asc')->paginate(4);
+        } elseif ($sort_by === 'tuZ_A') {
+            $filter_category = Category::orderBy('category_name', 'desc')->paginate(4);
+        }
+
+        return $filter_category;
     }
 }

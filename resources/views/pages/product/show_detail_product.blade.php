@@ -258,7 +258,7 @@
                                     </div>
                                     <div style="padding-bottom: 15px; color: black">
                                         Ngày nhập hàng
-                                        <h4><span id="created-at"></span></h4>
+                                        <h4>{{ $detail_product->created_at }}</h4>
                                     </div>
                                     <div style="padding-bottom: 10px">
                                         <input
@@ -294,97 +294,97 @@
                                 <table style="border-collapse: collapse">
                                     <tbody style="border: 2px solid #333;">
                                         <tr style="height: 60px; border: 2px solid #333;">
-                                            <td style="width: 11.4022%; height: 60px; padding:30px">
+                                            <td style="width: 11%; height: 60px; padding:30px">
                                                 <span style="font-size: 14pt; font-family: 'times new roman', times;">
                                                     CPU
                                                 </span>
                                             </td>
                                             <td
-                                                style="width: 88.5978%; height: 60px; border-left: 2px solid #333;padding:30px ">
+                                                style="width: 89%; height: 60px; border-left: 2px solid #333;padding:30px ">
                                                 <span
                                                     style="font-size: 14pt; font-family: 'times new roman', times;">{{ $detail_product->cpu }}</span>
                                             </td>
                                         </tr>
                                         <tr style="height: 60px; border: 2px solid #333;">
-                                            <td style="width: 11.4022%; height: 60px; padding:30px">
+                                            <td style="width: 11%; height: 60px; padding:30px">
                                                 <span style="font-size: 14pt; font-family: 'times new roman', times;">
                                                     RAM
                                                 </span>
                                             </td>
                                             <td
-                                                style="width: 88.5978%; height: 60px; border-left: 2px solid #333;padding:30px ">
+                                                style="width: 89%; height: 60px; border-left: 2px solid #333;padding:30px ">
                                                 <span
                                                     style="font-size: 14pt; font-family: 'times new roman', times;">{{ $detail_product->ram }}</span>
                                             </td>
                                         </tr>
                                         <tr style="height: 60px; border: 2px solid #333;">
-                                            <td style="width: 11.4022%; height: 60px; padding:30px">
+                                            <td style="width: 11%; height: 60px; padding:30px">
                                                 <span style="font-size: 14pt; font-family: 'times new roman', times;">
                                                     Storage
                                                 </span>
                                             </td>
                                             <td
-                                                style="width: 88.5978%; height: 60px;  border-left: 2px solid #333;padding:30px ">
+                                                style="width: 89%; height: 60px;  border-left: 2px solid #333;padding:30px ">
                                                 <span
                                                     style="font-size: 14pt; font-family: 'times new roman', times;">{{ $detail_product->storage }}</span>
                                             </td>
                                         </tr>
                                         <tr style="height: 60px; border: 2px solid #333;">
-                                            <td style="width: 11.4022%; height: 60px; padding:30px">
+                                            <td style="width: 11%; height: 60px; padding:30px">
                                                 <span style="font-size: 14pt; font-family: 'times new roman', times;">
                                                     Graphics Card
                                                 </span>
                                             </td>
                                             <td
-                                                style="width: 88.5978%; height: 60px; border-left: 2px solid #333;padding:30px ">
+                                                style="width: 89%; height: 60px; border-left: 2px solid #333;padding:30px ">
                                                 <span
                                                     style="font-size: 14pt; font-family: 'times new roman', times;">{{ $detail_product->graphics_card }}</span>
                                             </td>
                                         </tr>
                                         <tr style="height: 60px ; border: 2px solid #333;">
-                                            <td style="width: 11.4022%; height: 60px; padding:30px">
+                                            <td style="width: 11%; height: 60px; padding:30px">
                                                 <span style="font-size: 14pt; font-family: 'times new roman', times;">
                                                     Screen Size
                                                 </span>
                                             </td>
                                             <td
-                                                style="width: 88.5978%; height: 60px; border-left: 2px solid #333;padding:30px ">
+                                                style="width: 89%; height: 60px; border-left: 2px solid #333;padding:30px ">
                                                 <span
                                                     style="font-size: 14pt; font-family: 'times new roman', times;">{{ $detail_product->screen_size }}</span>
                                             </td>
                                         </tr>
                                         <tr style="height: 60px; border: 2px solid #333;">
-                                            <td style="width: 11.4022%; height: 60px; padding:30px">
+                                            <td style="width: 11%; height: 60px; padding:30px">
                                                 <span style="font-size: 14pt; font-family: 'times new roman', times;">
                                                     Connectivity Ports
                                                 </span>
                                             </td>
                                             <td
-                                                style="width: 88.5978%; height: 60px; border-left: 2px solid #333;padding:30px ">
+                                                style="width: 89%; height: 60px; border-left: 2px solid #333;padding:30px ">
                                                 <span
                                                     style="font-size: 14pt; font-family: 'times new roman', times;">{{ $detail_product->connectivity_ports }}</span>
                                             </td>
                                         </tr>
                                         <tr style="height: 60px; border: 2px solid #333;">
-                                            <td style="width: 11.4022%; height: 60px; padding:30px">
+                                            <td style="width: 11%; height: 60px; padding:30px">
                                                 <span style="font-size: 14pt; font-family: 'times new roman', times;">
                                                     Weight
                                                 </span>
                                             </td>
                                             <td
-                                                style="width: 88.5978%; height: 60px; border-left: 2px solid #333;padding:30px ">
+                                                style="width: 89%; height: 60px; border-left: 2px solid #333;padding:30px ">
                                                 <span
                                                     style="font-size: 14pt; font-family: 'times new roman', times;">{{ $detail_product->weight }}</span>
                                             </td>
                                         </tr>
                                         <tr style="height: 60px; border: 2px solid #333;">
-                                            <td style="width: 11.4022%; height: 60px; padding:30px">
+                                            <td style="width: 11%; height: 60px; padding:30px">
                                                 <span style="font-size: 14pt; font-family: 'times new roman', times;">
                                                     Battery
                                                 </span>
                                             </td>
                                             <td
-                                                style="width: 88.5978%; height: 60px; border-left: 2px solid #333;padding:30px ">
+                                                style="width: 89%; height: 60px; border-left: 2px solid #333;padding:30px ">
                                                 <span
                                                     style="font-size: 14pt; font-family: 'times new roman', times;">{{ $detail_product->battery }}</span>
                                             </td>
@@ -431,13 +431,29 @@
     <script src="{{ asset('public/frontend/index/js/main.js') }}"></script>
     <script>
         var inputElement = document.getElementById('inputQuantity');
-        inputElement.addEventListener('input', function() {
+        inputElement.addEventListener('input', function(event) {
+            const value = event.target.value;
+            const sanitizedValue = value.replace(/[-+]/g, '');
+            event.target.value = sanitizedValue;
+
+            var regex = /^[0-9]+$/;
+            var isValid = regex.test(event.target.value);
             var inputValue = parseInt(inputElement.value);
             var max = parseInt(inputElement.getAttribute('max'));
 
+            if (!isValid) {
+                toastify().warning('Vui lòng chỉ nhập số.');
+                event.target.value = '';
+            }
+
             if (inputValue > max) {
                 inputElement.value = max; // Đặt giá trị thành giá trị max nếu vượt quá
-                toastify().warning(`Số lượng vượt quá ${max}`);
+                toastify().warning('Số lượng vượt quá ' + max);
+            }
+
+            if (inputValue < 1) {
+                inputValue = inputValue; // Đặt giá trị thành giá trị value nếu vượt quá
+                toastify().warning('Số lượng không được nhỏ hơn 1');
             }
         });
     </script>

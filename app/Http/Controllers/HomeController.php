@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
-
     public function index()
     {
         if (Auth::user()) {
@@ -23,11 +22,11 @@ class HomeController extends Controller
             }
 
             $cate_product = Category::where('category_status', '1')->orderByDesc('category_id')->get();
-            $all_product = Product::where('product_status', '1')->orderByDesc('product_id')->paginate(6);
+            $all_product = Product::where('product_status', '1')->orderByDesc('product_id')->paginate(12);
             return view('pages.home')->with('category', $cate_product)->with('all_product', $all_product)->with('cart', $cart)->with('count_product', $count_product)->with('total_price', $total_price);
         } else {
             $cate_product = Category::where('category_status', '1')->orderByDesc('category_id')->get();
-            $all_product = Product::where('product_status', '1')->orderByDesc('product_id')->paginate(3);
+            $all_product = Product::where('product_status', '1')->orderByDesc('product_id')->paginate(12);
             return view('pages.home')->with('category', $cate_product)->with('all_product', $all_product);
         }
     }

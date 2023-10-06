@@ -9,21 +9,26 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th scope="col">Mã đơn hàng</th>
-                    <th scope="col">Tên sản phẩm</th>
-                    <th scope="col">Giá sản phẩm</th>
-                    <th scope="col">Số lượng</th>
-                    <th scope="col">Ngày mua hàng</th>
+                    <th scope="col" style="text-align: center; align-items: center">Mã đơn hàng</th>
+                    <th scope="col" style="text-align: center; align-items: center">Tên người mua</th>
+                    <th scope="col" style="text-align: center; align-items: center">Trạng thái đơn hàng</th>
+                    <th scope="col" style="text-align: center; align-items: center">Địa chỉ nhận hàng</th>
+                    <th scope="col" style="text-align: center; align-items: center">Ngày mua hàng</th>
+                    <th scope="col" style="text-align: center; align-items: center">Hành động</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($order_detail as $item)
+                @foreach ($order as $item)
                     <tr>
-                        <th scope="row">{{ $item->order_id }}</th>
-                        <td>{{ $item->product_name }}</td>
-                        <td>{{ number_format($item->product_price) }} đ</td>
-                        <td>{{ $item->product_quantity }}</td>
-                        <td>{{ DATE_FORMAT($item->created_at, 'H:i:s - d-m-Y') }}</td>
+                        <td style="text-align: center; align-items: center" scope="row">{{ $item->order_id }}</td>
+                        <td style="text-align: center; align-items: center">{{ Auth::user()->user_name }}</td>
+                        <td style="text-align: center; align-items: center">{{ $item->order_status }}</td>
+                        <td style="text-align: center; align-items: center">{{ $item->order_status }}</td>
+                        <td style="text-align: center; align-items: center">
+                            {{ DATE_FORMAT($item->created_at, 'H:i:s - d-m-Y') }}</td>
+                        <td style="text-align: center; align-items: center">
+                            <i class="fa fa-eye"></i>
+                        </td>
                     </tr>
                 @endforeach
             </tbody>

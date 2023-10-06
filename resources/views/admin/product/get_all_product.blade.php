@@ -1,5 +1,10 @@
 @extends('admin_layout')
 @section('admin_content')
+    @if (session('message'))
+        <script>
+            toastify().success('{{ session('message') }}');
+        </script>
+    @endif
     <div class="table-agile-info">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -7,6 +12,19 @@
             </div>
             <div class="row w3-res-tb" style="margin-bottom: 30px">
                 <div class="col-sm-7 m-b-xs">
+                    <form action="">
+                        @csrf
+                        <select name="filter_product" id="filter-product"
+                            style="padding: 10px; border: 1px solid #333; border-radius: 5px">
+                            <option>--Lọc Theo--</option>
+                            <option value="{{ URL::to('/filter-product') }}?sort_by=moinhat">Mới Nhất</option>
+                            <option value="{{ URL::to('/filter-product') }}?sort_by=tuA_Z">Từ A-Z</option>
+                            <option value="{{ URL::to('/filter-product') }}?sort_by=tuZ_A">Từ Z-A</option>
+                            <option value="{{ URL::to('/filter-product') }}?sort_by=tangdan">Giá từ Thấp Đến Cao</option>
+                            <option value="{{ URL::to('/filter-product') }}?sort_by=giamdan">Giá từ Cao Đến Thấp</option>
+                            <option value="{{ URL::to('/filter-product') }}?sort_by=banchay">Bán Chạy Nhất</option>
+                        </select>
+                    </form>
                 </div>
                 <div class="col-sm-5">
                     <form action="{{ URL::to('/search-product') }}" method="POST">
@@ -25,35 +43,31 @@
                 </div>
             </div>
             <div class="table-responsive" id="table-container">
-                <?php
-                $message = Session::get('message');
-                if ($message) {
-                    echo '<div class="text-alert">', $message, '</div>';
-                    Session::put('message', null);
-                }
-                ?>
                 <table class="table table-striped b-t b-light">
                     <thead>
                         <tr>
-                            <th>Mã sản phẩm</th>
-                            <th>Tên sản phẩm</th>
-                            <th>Danh mục</th>
-                            <th>Giá</th>
-                            <th>Hình Ảnh</th>
-                            <th>Trạng thái</th>
-                            <th>Hành động</th>
+                            <th style="text-align: center; align-items: center">Mã sản phẩm</th>
+                            <th style="text-align: center; align-items: center">Tên sản phẩm</th>
+                            <th style="text-align: center; align-items: center">Danh mục</th>
+                            <th style="text-align: center; align-items: center">Giá</th>
+                            <th style="text-align: center; align-items: center">Đã bán</th>
+                            <th style="text-align: center; align-items: center">Hình Ảnh</th>
+                            <th style="text-align: center; align-items: center">Trạng thái</th>
+                            <th style="text-align: center; align-items: center">Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($get_all_product as $key => $product)
                             <tr>
-                                <td>{{ $product->product_id }}</td>
-                                <td>{{ $product->product_name }}</td>
-                                <td>{{ $product->category_name }}</td>
-                                <td>{{ $product->product_price }}</td>
-                                <td><img src="public/uploads/product/{{ $product->product_image }}" height="100"
+                                <td style="text-align: center; align-items: center">{{ $product->product_id }}</td>
+                                <td style="text-align: center; align-items: center">{{ $product->product_name }}</td>
+                                <td style="text-align: center; align-items: center">{{ $product->category_name }}</td>
+                                <td style="text-align: center; align-items: center">{{ $product->product_price }}</td>
+                                <td style="text-align: center; align-items: center">{{ $product->product_sold }}</td>
+                                <td style="text-align: center; align-items: center"><img
+                                        src="public/uploads/product/{{ $product->product_image }}" height="100"
                                         width="150"></td>
-                                <td>
+                                <td style="text-align: center; align-items: center">
                                     <span class="text-ellipsis">
                                         <?php
                                                     if($product->product_status==1){
@@ -70,7 +84,7 @@
                                             ?>
                                     </span>
                                 </td>
-                                <td>
+                                <td style="text-align: center; align-items: center">
                                     <a href="{{ URL::to('/edit-product/' . $product->product_id) }}"
                                         class="active styling-edit" ui-toggle-class="">
                                         <i class="fa fa-pencil-square-o text-success text-active"></i>

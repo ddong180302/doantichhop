@@ -2,11 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Login;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Support\Facades\Session;
-use App\Rules\Captcha;
 use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
