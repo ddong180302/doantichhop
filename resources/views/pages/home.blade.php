@@ -6,22 +6,38 @@
         </script>
     @endif
 
-    <div class="row" style="padding-bottom: 40px">
-        <form action="">
-            @csrf
-            <select name="filter_option" id="filter-option" style="padding: 10px; border: 1px solid #333; border-radius: 5px">
-                <option value="{{ URL::to('/filter') }}?sort_by=moinhat">Mới Nhất</option>
-                <option value="{{ URL::to('/filter') }}?sort_by=tuA_Z">Từ A-Z</option>
-                <option value="{{ URL::to('/filter') }}?sort_by=tuZ_A">Từ Z-A</option>
-                <option value="{{ URL::to('/filter') }}?sort_by=tangdan">Giá từ Thấp Đến Cao</option>
-                <option value="{{ URL::to('/filter') }}?sort_by=giamdan">Giá từ Cao Đến Thấp</option>
-                <option value="{{ URL::to('/filter') }}?sort_by=banchay">Bán Chạy Nhất</option>
-            </select>
-        </form>
+    <div class="row" style="padding-bottom: 20px">
+        <div class="col-lg-6">
+            <div style="padding-bottom: 10px">Sắp xếp theo</div>
+            <div>
+                <form action="">
+                    @csrf
+                    <select name="filter_option" id="filter-option"
+                        style="padding: 10px; border: 1px solid #333; border-radius: 5px">
+                        <option value="{{ URL::to('/filter') }}?sort_by=moinhat">Mới Nhất</option>
+                        <option value="{{ URL::to('/filter') }}?sort_by=tuA_Z">Từ A-Z</option>
+                        <option value="{{ URL::to('/filter') }}?sort_by=tuZ_A">Từ Z-A</option>
+                        <option value="{{ URL::to('/filter') }}?sort_by=tangdan">Giá từ Thấp Đến Cao</option>
+                        <option value="{{ URL::to('/filter') }}?sort_by=giamdan">Giá từ Cao Đến Thấp</option>
+                        <option value="{{ URL::to('/filter') }}?sort_by=banchay">Bán Chạy Nhất</option>
+                    </select>
+                </form>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div style="padding-bottom: 10px">Lọc theo khoảng giá</div>
+            <div class="filter-container">
+                <div id="priceRangeSlider"></div>
+                Từ
+                <span id="minPriceValue" class="price-value">0đ</span>
+                - <span id="maxPriceValue" class="price-value">100000000đ</span>
+                <button id="filterButton" class="filter-button btn btn-primary">Lọc</button>
+            </div>
+        </div>
     </div>
     <div class="row" id="product-list">
         @foreach ($all_product as $key => $product)
-            <div class="col-lg-4 col-sm-6">
+            <div class="col-lg-4 col-sm-6 product-item-price" data-price="{{ $product->product_price }}">
                 <div class="product-item">
                     <div class="pi-pic">
                         <img src="{{ URL::to('public/uploads/product/' . $product->product_image) }}" alt="">

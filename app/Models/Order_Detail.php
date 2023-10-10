@@ -24,6 +24,7 @@ class Order_Detail extends Model
         'product_name',
         'product_price',
         'product_quantity',
+        'product_image',
     ];
 
     /**

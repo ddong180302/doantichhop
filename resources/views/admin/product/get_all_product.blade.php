@@ -85,15 +85,26 @@
                                     </span>
                                 </td>
                                 <td style="text-align: center; align-items: center">
-                                    <a href="{{ URL::to('/edit-product/' . $product->product_id) }}"
-                                        class="active styling-edit" ui-toggle-class="">
-                                        <i class="fa fa-pencil-square-o text-success text-active"></i>
-                                    </a>
-                                    <a onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này không?')"
-                                        href="{{ URL::to('/delete-product/' . $product->product_id) }}"
-                                        class="active styling-delete" ui-toggle-class="">
-                                        <i class="fa fa-times text-danger text"></i>
-                                    </a>
+                                    <div>
+                                        <a href="{{ URL::to('/edit-product/' . $product->product_id) }}"
+                                            class="active styling-edit hover-edit-product" ui-toggle-class="">
+                                            <i class="fa fa-pencil-square-o text-success text-active"></i>
+                                        </a>
+                                    </div>
+                                    <div>
+                                        <a onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này không?')"
+                                            href="{{ URL::to('/delete-product/' . $product->product_id) }}"
+                                            class="active styling-delete hover-delete-product" ui-toggle-class="">
+                                            <i class="fa fa-times text-danger text"></i>
+                                        </a>
+                                    </div>
+
+                                    <div>
+                                        <a href="{{ URL::to('/show-add-image/' . $product->product_id) }}"
+                                            class="active styling-edit hover-add-image" ui-toggle-class="">
+                                            <i class="fa fa-image text-success text-active"></i>
+                                        </a>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach

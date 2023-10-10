@@ -277,6 +277,8 @@
                 <div class="col-lg-12">
                     <div class="breadcrumb-text">
                         <a href="{{ URL::to('/') }}"><i class="fa fa-home"></i> Trang chủ</a>
+                        <a href="{{ URL::to('/show-user-profile/' . Auth::user()->user_id) }}"><i
+                                class="fa fa-user"></i> Trang cá nhân</a>
                     </div>
                 </div>
             </div>
@@ -326,15 +328,17 @@
     <script src="{{ asset('public/frontend/index/js/main.js') }}"></script>
     <script>
         var inputElement = document.getElementById('inputQuantity');
-        inputElement.addEventListener('input', function() {
-            var inputValue = parseInt(inputElement.value);
-            var max = parseInt(inputElement.getAttribute('max'));
+        if (inputElement) {
+            inputElement.addEventListener('input', function() {
+                var inputValue = parseInt(inputElement.value);
+                var max = parseInt(inputElement.getAttribute('max'));
 
-            if (inputValue > max) {
-                inputElement.value = max; // Đặt giá trị thành giá trị max nếu vượt quá
-                toastify().warning(`Số lượng vượt quá ${max}`);
-            }
-        });
+                if (inputValue > max) {
+                    inputElement.value = max; // Đặt giá trị thành giá trị max nếu vượt quá
+                    toastify().warning(`Số lượng vượt quá ${max}`);
+                }
+            });
+        }
     </script>
     <script>
         function previewImage(event) {
@@ -401,72 +405,133 @@
         const cancelButton = document.getElementById('cancelButton');
 
         // Xử lý sự kiện khi nhấn nút "Thay đổi thông tin"
-        editButton.addEventListener('click', function() {
-            viewForm.style.display = 'none';
-            editForm.style.display = 'block';
-        });
+        if (editButton) {
+            editButton.addEventListener('click', function() {
+                viewForm.style.display = 'none';
+                editForm.style.display = 'block';
+            });
+        }
 
         // Xử lý sự kiện khi nhấn nút "Hủy"
-        cancelButton.addEventListener('click', function() {
-            viewForm.style.display = 'block';
-            editForm.style.display = 'none';
-        });
+        if (cancelButton) {
+            cancelButton.addEventListener('click', function() {
+                viewForm.style.display = 'block';
+                editForm.style.display = 'none';
+            });
+        }
     </script>
 
     <script>
         const passwordInput1 = document.getElementById('passwordInput1');
         const togglePassword1 = document.getElementById('togglePassword1');
 
-
-
-        togglePassword1.addEventListener('click', function() {
-            const type = passwordInput1.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput1.setAttribute('type', type);
-            togglePassword1.classList.toggle('fa-eye-slash');
-        });
+        if (togglePassword1) {
+            togglePassword1.addEventListener('click', function() {
+                const type = passwordInput1.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput1.setAttribute('type', type);
+                togglePassword1.classList.toggle('fa-eye-slash');
+            });
+        }
     </script>
 
     <script>
         const passwordInput2 = document.getElementById('passwordInput2');
         const togglePassword2 = document.getElementById('togglePassword2');
 
-        togglePassword2.addEventListener('click', function() {
-            const type = passwordInput2.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput2.setAttribute('type', type);
-            togglePassword2.classList.toggle('fa-eye-slash');
-        });
+        if (togglePassword2) {
+            togglePassword2.addEventListener('click', function() {
+                const type = passwordInput2.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput2.setAttribute('type', type);
+                togglePassword2.classList.toggle('fa-eye-slash');
+            });
+        }
     </script>
 
     <script>
         const passwordInput3 = document.getElementById('passwordInput3');
         const togglePassword3 = document.getElementById('togglePassword3');
 
-        togglePassword3.addEventListener('click', function() {
-            const type = passwordInput3.getAttribute('type') === 'password' ? 'text' : 'password';
-            passwordInput3.setAttribute('type', type);
-            togglePassword3.classList.toggle('fa-eye-slash');
-        });
+        if (togglePassword3) {
+            togglePassword3.addEventListener('click', function() {
+                const type = passwordInput3.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput3.setAttribute('type', type);
+                togglePassword3.classList.toggle('fa-eye-slash');
+            });
+        }
     </script>
 
     <script>
-        document.querySelector('form').addEventListener('submit', function(event) {
-            event.preventDefault(); // Ngăn chặn chuyển hướng mặc định khi submit form
+        if (document.querySelector('form')) {
+            document.querySelector('form').addEventListener('submit', function(event) {
+                event.preventDefault(); // Ngăn chặn chuyển hướng mặc định khi submit form
 
-            // Lấy giá trị của các trường mật khẩu
-            var passwordInput2 = document.getElementById('passwordInput2').value;
-            var passwordInput3 = document.getElementById('passwordInput3').value;
+                // Lấy giá trị của các trường mật khẩu
+                var passwordInput2 = document.getElementById('passwordInput2').value;
+                var passwordInput3 = document.getElementById('passwordInput3').value;
 
-            // Kiểm tra mật khẩu nhập lại có khớp với mật khẩu mới hay không
-            if (passwordInput2 !== passwordInput3) {
-                // Mật khẩu nhập lại không khớp, hiển thị thông báo hoặc thực hiện hành vi tương ứng
-                alert('Mật khẩu nhập lại không khớp. Vui lòng nhập lại!');
-                document.getElementById('passwordInput2').value = ''; // Xóa giá trị trường mật khẩu mới
-                document.getElementById('passwordInput3').value = ''; // Xóa giá trị trường xác thực mật khẩu mới
-                document.getElementById('passwordInput2').focus(); // Focus vào trường mật khẩu mới
-            } else {
-                // Mật khẩu nhập lại khớp, tiếp tục chuyển hướng đến URL /change-password
-                this.submit();
-            }
+                // Kiểm tra mật khẩu nhập lại có khớp với mật khẩu mới hay không
+                if (passwordInput2 !== passwordInput3) {
+                    // Mật khẩu nhập lại không khớp, hiển thị thông báo hoặc thực hiện hành vi tương ứng
+                    alert('Mật khẩu nhập lại không khớp. Vui lòng nhập lại!');
+                    document.getElementById('passwordInput2').value = ''; // Xóa giá trị trường mật khẩu mới
+                    document.getElementById('passwordInput3').value =
+                        ''; // Xóa giá trị trường xác thực mật khẩu mới
+                    document.getElementById('passwordInput2').focus(); // Focus vào trường mật khẩu mới
+                } else {
+                    // Mật khẩu nhập lại khớp, tiếp tục chuyển hướng đến URL /change-password
+                    this.submit();
+                }
+            });
+        }
+    </script>
+    {{-- <script>
+        document.getElementById('backButton').addEventListener('click', function() {
+            history.back();
+        });
+    </script> --}}
+    {{-- <script>
+        // Khi trạng thái đơn hàng được chọn thay đổi
+        document.getElementById('order_status_select').addEventListener('change', function() {
+            var orderStatus = this.value; // Lấy giá trị trạng thái đơn hàng được chọn
+
+            // Gửi yêu cầu Ajax để lấy lại dữ liệu tbody
+            var xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var newTbody = xhr.responseText; // Nhận dữ liệu tbody mới
+
+                    // Thay thế tbody hiện tại bằng tbody mới
+                    var tableBody = document.getElementById('table_body');
+                    tableBody.innerHTML = newTbody;
+                }
+            };
+
+            // Gửi yêu cầu GET đến một tài nguyên trên máy chủ để xử lý việc lọc dữ liệu
+            var url = '/filter-orders?order_status=' + orderStatus;
+            xhr.open('GET', url, true);
+            xhr.send();
+        });
+    </script> --}}
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#order_status_select').on('change', function() {
+                var url = $(this).val();
+                console.log(url);
+                if (url) {
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        success: function(data) {
+                            $('#table_body').html(data);
+                        },
+                        error: function() {
+                            alert('Đã xảy ra lỗi. Vui lòng thử lại sau.');
+                        }
+                    });
+                }
+                return false;
+            });
         });
     </script>
 </body>

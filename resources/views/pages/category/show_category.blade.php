@@ -145,7 +145,6 @@
                                                 class="primary-btn view-card">
                                                 XEM GIỎ HÀNG
                                             </a>
-                                            <a href="#" class="primary-btn checkout-btn">THANH TOÁN</a>
                                         </div>
                                     </div>
                                 @else

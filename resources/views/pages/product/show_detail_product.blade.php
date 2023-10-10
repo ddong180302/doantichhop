@@ -7,7 +7,7 @@
     <meta name="keywords" content="Fashi, unica, creative, html">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Trang chủ</title>
+    <title>Trang chi tiết sản phẩm</title>
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css?family=Muli:300,400,500,600,700,800,900&display=swap" rel="stylesheet">
@@ -24,6 +24,99 @@
     <link rel="stylesheet" href="{{ asset('public/frontend/index/css/style.css') }}" type="text/css">
     @toastifyCss
     @toastifyJs
+    <style>
+        .product-gallery {
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #ddd;
+            overflow: hidden;
+        }
+
+        .product-images {
+            display: flex;
+        }
+
+        .product-image {
+            width: 100px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .product-image:hover {
+            opacity: 0.7;
+            cursor: pointer;
+        }
+
+        .gallery-slider {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0s, opacity 0.3s;
+            z-index: 1000000000000000000;
+        }
+
+        .close-slider {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .slider-images {
+            display: flex;
+        }
+
+        .slider-image {
+
+            width: 900px;
+            height: 600px;
+            margin-right: 10px;
+        }
+
+        .slider-navigation {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .prev-slide,
+        .next-slide {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 24px;
+            color: #000;
+            background-color: #45d6e9;
+            cursor: pointer;
+            padding: 5px 16px;
+            border-radius: 50%;
+            /* Thêm các thuộc tính khác cho nút điều hướng nếu cần */
+        }
+
+        .prev-slide {
+            left: 30px;
+        }
+
+        .next-slide {
+            right: 30px;
+        }
+
+        .hide {
+            display: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -145,7 +238,7 @@
                                                 class="primary-btn view-card">
                                                 XEM GIỎ HÀNG
                                             </a>
-                                            <a href="#" class="primary-btn checkout-btn">THANH TOÁN</a>
+
                                         </div>
                                     </div>
                                 @else
@@ -232,8 +325,32 @@
                             </div>
                             <div class="row" style="padding: 50px; border-bottom: 2px solid #ddd;">
                                 <div class="col-lg-6">
-                                    <img src="{{ URL::to('public/uploads/product/' . $detail_product->product_image) }}"
-                                        alt="">
+                                    <div>
+                                        <img src="{{ URL::to('public/uploads/product/' . $detail_product->product_image) }}"
+                                            alt="" id="mainImage">
+                                    </div>
+                                    <div style="margin-top: 20px">
+                                        <div class="product-gallery">
+                                            <div class="product-images">
+                                                @foreach ($gallery as $item)
+                                                    <img src="{{ URL::to('public/uploads/product/' . $item->gallery_image) }}"
+                                                        alt="Product Image 1" class="product-image">
+                                                    {{-- onmouseover="changeImage('{{ $item->gallery_image }}')"
+                                                        onmouseout="resetImage()" onclick="changeImage('{{ $item->gallery_image }}')" --}}
+                                                @endforeach
+                                            </div>
+                                            <div class="gallery-slider">
+                                                <span class="close-slider">&times;</span>
+                                                <div class="slider-images">
+                                                    <img src="" alt="Product Image 1" class="slider-image">
+                                                </div>
+                                                <div class="slider-navigation">
+                                                    <span class="prev-slide">&lt;</span>
+                                                    <span class="next-slide">&gt;</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-lg-6" style="padding-left: 60px" id="detail-cart">
                                     <div style="padding-bottom: 15px; color: black">
@@ -429,6 +546,7 @@
     <script src="{{ asset('public/frontend/index/js/jquery.slicknav.js') }}"></script>
     <script src="{{ asset('public/frontend/index/js/owl.carousel.min.js') }}"></script>
     <script src="{{ asset('public/frontend/index/js/main.js') }}"></script>
+    {{-- <script src="{{ asset('public/user/js/gallery.js') }}"></script> --}}
     <script>
         var inputElement = document.getElementById('inputQuantity');
         inputElement.addEventListener('input', function(event) {
@@ -471,6 +589,96 @@
             });
         </script>
     @endif
+
+    <script>
+        const productImages = document.querySelectorAll('.product-image');
+        const gallerySlider = document.querySelector('.gallery-slider');
+        const sliderImage = document.querySelector('.slider-image');
+        const closeSlider = document.querySelector('.close-slider');
+        const prevSlide = document.querySelector('.prev-slide');
+        const nextSlide = document.querySelector('.next-slide');
+
+        let currentIndex = 0;
+
+        function showSlider() {
+            gallerySlider.style.visibility = 'visible';
+            gallerySlider.style.opacity = '1';
+        }
+
+        function hideSlider() {
+            gallerySlider.style.visibility = 'hidden';
+            gallerySlider.style.opacity = '0';
+        }
+
+        function updateSlider() {
+            if (currentIndex === 0) {
+                prevSlide.classList.add('hide');
+            } else {
+                prevSlide.classList.remove('hide');
+            }
+
+            if (currentIndex === productImages.length - 1) {
+                nextSlide.classList.add('hide');
+            } else {
+                nextSlide.classList.remove('hide');
+            }
+        }
+
+        function showImage(index) {
+            const selectedImage = productImages[index].src;
+            sliderImage.src = selectedImage;
+            updateSlider();
+        }
+
+        productImages.forEach((image, index) => {
+            image.addEventListener('click', () => {
+                currentIndex = index;
+                showImage(currentIndex);
+                showSlider();
+            });
+        });
+
+        closeSlider.addEventListener('click', () => {
+            hideSlider();
+        });
+
+        prevSlide.addEventListener('click', () => {
+            if (currentIndex > 0) {
+                currentIndex--;
+                showImage(currentIndex);
+            }
+        });
+
+        nextSlide.addEventListener('click', () => {
+            if (currentIndex < productImages.length - 1) {
+                currentIndex++;
+                showImage(currentIndex);
+            }
+        });
+
+        // Ẩn nút điều hướng trước khi slider được khởi tạo
+        prevSlide.classList.add('hide');
+        nextSlide.classList.add('hide');
+    </script>
+
+    {{-- <script>
+        function changeImage(imageUrl) {
+            var mainImage = document.getElementById('mainImage');
+            mainImage.src = "{{ URL::to('public/uploads/product/') }}" + '/' + imageUrl;
+        }
+    </script> --}}
+
+    {{-- <script>
+        function changeImage(imageUrl) {
+            var mainImage = document.getElementById('mainImage');
+            mainImage.src = "{{ URL::to('public/uploads/product/') }}" + '/' + imageUrl;
+        }
+
+        function resetImage() {
+            var mainImage = document.getElementById('mainImage');
+            mainImage.src = "{{ URL::to('public/uploads/product/' . $detail_product->product_image) }}";
+        }
+    </script> --}}
 </body>
 
 </html>

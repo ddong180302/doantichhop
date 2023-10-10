@@ -9,7 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class Brand extends Model
+class Gallery extends Model
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -19,7 +19,6 @@ class Brand extends Model
      * @var array<int, string>
      */
     protected $fillable = [
-        'gallery_name',
         'gallery_image',
         'product_id',
     ];

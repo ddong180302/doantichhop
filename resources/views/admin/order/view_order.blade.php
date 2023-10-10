@@ -1,31 +1,35 @@
 @extends('admin_layout')
 @section('admin_content')
+    @if (session('message'))
+        <script>
+            toastify().success('{{ session('message') }}');
+        </script>
+    @endif
+    <div style="padding: 20px">
+        <a href="{{ URL::to('/manage-order') }}">
+            <button class="btn btn-success">Quay lại</button>
+        </a>
+    </div>
     <div class="table-agile-info">
         <div class="panel panel-default">
             <div class="panel-heading">
-                Thông tin đăng nhập
+                Thông tin khách hàng
             </div>
             <div class="table-responsive">
-                <?php
-                $message = Session::get('message');
-                if ($message) {
-                    echo '<span class="text-alert">' . $message . '</span>';
-                    Session::put('message', null);
-                }
-                ?>
                 <table class="table table-striped b-t b-light">
                     <thead>
                         <tr>
-                            <th>Tên khách hàng</th>
-                            <th>Số điện thoại</th>
-                            <th>Email</th>
+                            <th style="text-align: center; align-items: center">Tên khách hàng</th>
+                            <th style="text-align: center; align-items: center">Số điện thoại</th>
+                            <th style="text-align: center; align-items: center">Email đặt hàng</th>
+                            <th style="text-align: center; align-items: center">Địa chỉ nhận hàng</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{{ $user->user_name }}</td>
-                            <td>{{ $user->user_phone }}</td>
-                            <td>{{ $user->user_email }}</td>
+                            <td style="text-align: center; align-items: center">{{ $user->user_name }}</td>
+                            <td style="text-align: center; align-items: center">{{ $user->user_phone }}</td>
+                            <td style="text-align: center; align-items: center">{{ $user->user_email }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -33,10 +37,59 @@
         </div>
     </div>
 
+    <br>
+
     <div class="table-agile-info">
         <div class="panel panel-default">
             <div class="panel-heading">
-                Liệt kê chi tiết đơn hàng
+                Chuyển đổi trạng thái đơn hàng
+            </div>
+            <form action="{{ URL::to('/update-status-order/' . $order->order_id) }}" method="POST">
+                {{ csrf_field() }}
+                <div style="display: flex; flex-direction: row; justify-content: center; gap: 100px; padding: 40px 0">
+                    <div>Trạng Thái đơn hàng</div>
+                    <div>
+                        <select style="width: 300px; padding: 10px; border: 1px solid #333; outline: none"
+                            name="order_status" id="">
+                            <option value="{{ $order->order_status }}">
+                                @if ($order->order_status === 1)
+                                    Chưa xử lý
+                                @elseif($order->order_status === 2)
+                                    Đang xử lý
+                                @elseif($order->order_status === 3)
+                                    Đang đóng gói
+                                @elseif($order->order_status === 4)
+                                    Đang vận chuyển
+                                @elseif($order->order_status === 5)
+                                    Hoàn thành
+                                @endif
+                            </option>
+                            @if ($order->order_status !== 2 && $order->order_status < 2)
+                                <option value="2">Đang xử lý</option>
+                            @endif
+                            @if ($order->order_status !== 3 && $order->order_status < 3)
+                                <option value="3">Đang đóng gói</option>
+                            @endif
+                            @if ($order->order_status !== 4 && $order->order_status < 4)
+                                <option value="4">Đang vận chuyển</option>
+                            @endif
+                            @if ($order->order_status !== 5 && $order->order_status < 5)
+                                <option value="5">Hoàn thành</option>
+                            @endif
+                        </select>
+                    </div>
+                    <div>
+                        <button class="btn btn-primary" type="submit">Xác Nhận</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <br>
+    <div class="table-agile-info">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Chi tiết đơn hàng
             </div>
             <div class="table-responsive">
                 <?php
@@ -50,13 +103,21 @@
                 <table class="table table-striped b-t b-light">
                     <thead>
                         <tr>
-                            <th>
+                            <th style="text-align: center; align-items: center">
                                 Số thứ tự
                             </th>
-                            <th>Tên sản phẩm</th>
-                            <th>Số lượng</th>
-                            <th>Giá sản phẩm</th>
-                            <th>Tổng tiền</th>
+                            <th style="text-align: center; align-items: center">
+                                Tên sản phẩm
+                            </th>
+                            <th style="text-align: center; align-items: center">
+                                Số lượng
+                            </th>
+                            <th style="text-align: center; align-items: center">
+                                Giá sản phẩm
+                            </th>
+                            <th style="text-align: center; align-items: center">
+                                Tổng tiền
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -71,55 +132,23 @@
                                 $total += $subtotal;
                             @endphp
                             <tr class="color_qty_{{ $details->product_id }}">
-                                <td>{{ $i }}</td>
-                                <td>{{ $details->product_name }}</td>
-                                <td>{{ $details->product_quantity }}</td>
-                                <td>{{ number_format($details->product_price, 0, ',', '.') }} đ</td>
-                                <td>{{ number_format($subtotal, 0, ',', '.') }} đ</td>
+                                <td style="text-align: center; align-items: center">
+                                    {{ $i }}
+                                </td>
+                                <td style="text-align: center; align-items: center">
+                                    {{ $details->product_name }}
+                                </td>
+                                <td style="text-align: center; align-items: center">
+                                    {{ $details->product_quantity }}
+                                </td>
+                                <td style="text-align: center; align-items: center">
+                                    {{ number_format($details->product_price, 0, ',', '.') }} đ
+                                </td>
+                                <td style="text-align: center; align-items: center">
+                                    {{ number_format($subtotal, 0, ',', '.') }} đ
+                                </td>
                             </tr>
                         @endforeach
-                        <tr>
-                            <td colspan="6">
-                                @if ($order->order_status == 1)
-                                    <form>
-                                        @csrf
-                                        <select class="form-control order_details">
-                                            <option value="">----Chọn hình thức đơn hàng-----</option>
-                                            <option id="{{ $order->order_id }}" selected value="1">Chưa xử lý
-                                            </option>
-                                            <option id="{{ $order->order_id }}" value="2">Đã xử lý-Đã giao hàng
-                                            </option>
-                                            <option id="{{ $order->order_id }}" value="3">Hủy đơn hàng-tạm giữ
-                                            </option>
-                                        </select>
-                                    </form>
-                                @elseif($order->order_status == 2)
-                                    <form>
-                                        @csrf
-                                        <select class="form-control order_details">
-                                            <option value="">----Chọn hình thức đơn hàng-----</option>
-                                            <option id="{{ $order->order_id }}" value="1">Chưa xử lý</option>
-                                            <option id="{{ $order->order_id }}" selected value="2">Đã xử lý-Đã giao
-                                                hàng</option>
-                                            <option id="{{ $order->order_id }}" value="3">Hủy đơn hàng-tạm giữ
-                                            </option>
-                                        </select>
-                                    </form>
-                                @else
-                                    <form>
-                                        @csrf
-                                        <select class="form-control order_details">
-                                            <option value="">----Chọn hình thức đơn hàng-----</option>
-                                            <option id="{{ $order->order_id }}" value="1">Chưa xử lý</option>
-                                            <option id="{{ $order->order_id }}" value="2">Đã xử lý-Đã giao hàng
-                                            </option>
-                                            <option id="{{ $order->order_id }}" selected value="3">Hủy đơn hàng-tạm
-                                                giữ</option>
-                                        </select>
-                                    </form>
-                                @endif
-                            </td>
-                        </tr>
                     </tbody>
                 </table>
             </div>

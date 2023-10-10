@@ -5,6 +5,9 @@
             toastify().success('{{ session('message') }}');
         </script>
     @endif
+    <div style="display: flex; justify-content: center; padding: 20px 0">
+        <h3>Lịch sử mua hàng</h3>
+    </div>
     <div>
         <table class="table">
             <thead>
@@ -17,17 +20,32 @@
                     <th scope="col" style="text-align: center; align-items: center">Hành động</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="table_body">
                 @foreach ($order as $item)
                     <tr>
                         <td style="text-align: center; align-items: center" scope="row">{{ $item->order_id }}</td>
                         <td style="text-align: center; align-items: center">{{ Auth::user()->user_name }}</td>
-                        <td style="text-align: center; align-items: center">{{ $item->order_status }}</td>
-                        <td style="text-align: center; align-items: center">{{ $item->order_status }}</td>
+                        @if ($item->order_status === 1)
+                            <td style="text-align: center; align-items: center">Chờ xác nhận</td>
+                        @elseif($item->order_status === 2)
+                            <td style="text-align: center; align-items: center">Đã xác nhận</td>
+                        @elseif($item->order_status === 3)
+                            <td style="text-align: center; align-items: center">Chờ lấy hàng</td>
+                        @elseif($item->order_status === 4)
+                            <td style="text-align: center; align-items: center">Đang giao hàng </td>
+                        @elseif($item->order_status === 5)
+                            <td style="text-align: center; align-items: center">Đã hoàn thành </td>
+                        @endif
                         <td style="text-align: center; align-items: center">
-                            {{ DATE_FORMAT($item->created_at, 'H:i:s - d-m-Y') }}</td>
+                            {{ $item->name_xaphuong }}, {{ $item->name_quanhuyen }}, {{ $item->name_city }}
+                        </td>
                         <td style="text-align: center; align-items: center">
-                            <i class="fa fa-eye"></i>
+                            {{ DATE_FORMAT($item->created_at, 'H:i:s - d-m-Y') }}
+                        </td>
+                        <td style="text-align: center; align-items: center; ">
+                            <a href="{{ URL::to('/show-detail-order-history/' . $item->order_id) }}">
+                                <i style="cursor: pointer;" class="fa fa-eye"></i>
+                            </a>
                         </td>
                     </tr>
                 @endforeach

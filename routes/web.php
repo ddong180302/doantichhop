@@ -60,6 +60,8 @@ Route::post('/search-product', [ProductController::class, 'search_product']);
 
 Route::get('/filter', [ProductController::class, 'filter']);
 Route::get('/filter-product', [ProductController::class, 'filter_product']);
+Route::get('/show-add-image/{product_id}', [ProductController::class, 'show_add_image']);
+Route::post('/add-image-product/{product_id}', [ProductController::class, 'add_image_product']);
 
 
 
@@ -74,8 +76,9 @@ Route::get('/checkout', [CheckoutController::class, 'checkout']);
 
 
 //order
-Route::get('/manage-order', [CheckoutController::class, 'manage_order']);
-Route::get('/view-order/{order_id}', [CheckoutController::class, 'view_order']);
+Route::get('/manage-order', [OrderController::class, 'manage_order']);
+Route::get('/view-order/{order_id}', [OrderController::class, 'view_order']);
+Route::post('/update-status-order/{order_id}', [OrderController::class, 'update_status_order']);
 
 
 //Authentication roles
@@ -132,6 +135,8 @@ Route::post('/update-profile/{user_id}', [UserController::class, 'update_profile
 Route::post('/change-password-user/{user_id}', [UserController::class, 'change_password_user']);
 Route::post('/select-delivery', [UserController::class, 'select_delivery']);
 Route::get('/show-order-history/{user_id}', [UserController::class, 'show_order_history']);
+Route::get('/show-detail-order-history/{order_id}', [UserController::class, 'show_detail_order_history']);
+
 
 
 //Cart

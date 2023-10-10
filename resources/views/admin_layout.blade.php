@@ -34,6 +34,103 @@ Author: NHóm 4
     <script src="{{ asset('public/backend/js/morris.js') }}"></script>
     @toastifyCss
     @toastifyJs
+    <style>
+        /* hover thêm image product */
+        .hover-add-image {
+            position: relative;
+            display: inline-block;
+        }
+
+        .hover-add-image::before {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            width: 50px;
+            transform: translateX(-50%);
+            background-color: #1cc6cf;
+            color: #fff;
+            padding: 5px;
+            border-radius: 3px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 1;
+        }
+
+        .hover-add-image:hover::before {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .hover-add-image:hover::before {
+            content: "Thêm hình ảnh";
+        }
+
+        /* hover edit product */
+        .hover-edit-product {
+            position: relative;
+            display: inline-block;
+        }
+
+        .hover-edit-product::before {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            width: 50px;
+            transform: translateX(-50%);
+            background-color: #1cc6cf;
+            color: #fff;
+            padding: 5px;
+            border-radius: 3px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 1;
+        }
+
+        .hover-edit-product:hover::before {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .hover-edit-product:hover::before {
+            content: "Sửa sản phẩm";
+        }
+
+        /* hover delete product */
+        .hover-delete-product {
+            position: relative;
+            display: inline-block;
+        }
+
+        .hover-delete-product::before {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            width: 50px;
+            transform: translateX(-50%);
+            background-color: #1cc6cf;
+            color: #fff;
+            padding: 5px;
+            border-radius: 3px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            z-index: 1;
+        }
+
+        .hover-delete-product:hover::before {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .hover-delete-product:hover::before {
+            content: "Xóa sản phẩm";
+        }
+    </style>
 </head>
 
 <body>
@@ -176,7 +273,10 @@ Author: NHóm 4
             <!-- footer -->
             <div class="footer">
                 <div class="wthree-copyright">
-                    <p>© 2023 Visitors. All rights reserved | Design by <a href="http://w3layouts.com">Nhóm 4</a></p>
+                    Được thực hiện bởi nhóm 2 vào năm
+                    <script>
+                        document.write(new Date().getFullYear());
+                    </script>
                 </div>
             </div>
             <!-- / footer -->

@@ -56,6 +56,33 @@
         #pagination-container svg {
             width: 20px !important;
         }
+
+        .filter-container {
+            margin-bottom: 20px;
+        }
+
+        #priceRangeSlider {
+            width: 300px;
+            margin-bottom: 10px;
+        }
+
+        .price-value {
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        .filter-button {
+            margin-left: 10px;
+        }
+
+        .item-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .item {
+            margin-bottom: 5px;
+        }
     </style>
 </head>
 
@@ -179,7 +206,6 @@
                                                 class="primary-btn view-card">
                                                 XEM GIỎ HÀNG
                                             </a>
-                                            <a href="#" class="primary-btn checkout-btn">THANH TOÁN</a>
                                         </div>
                                     </div>
                                 @else
@@ -233,7 +259,6 @@
                                 </a>
                             </li>
                         @endif
-                        <li><a href="#">Contact</a></li>
                     </ul>
                 </nav>
                 <div id="mobile-menu-wrap"></div>
@@ -302,26 +327,28 @@
     <script src="{{ asset('public/frontend/index/js/main.js') }}"></script>
     <script>
         var inputElement = document.getElementById('inputQuantity');
-        inputElement.addEventListener('input', function() {
-            var regex = /^[0-9]+$/;
-            var isValid = regex.test(input.value);
-            if (!isValid) {
-                toastify().warning(`Vui lòng chỉ nhập số.`);
-                input.value = "";
-            }
-            var inputValue = parseInt(inputElement.value);
-            var max = parseInt(inputElement.getAttribute('max'));
+        if (inputElement) {
+            inputElement.addEventListener('input', function() {
+                var regex = /^[0-9]+$/;
+                var isValid = regex.test(input.value);
+                if (!isValid) {
+                    toastify().warning(`Vui lòng chỉ nhập số.`);
+                    input.value = "";
+                }
+                var inputValue = parseInt(inputElement.value);
+                var max = parseInt(inputElement.getAttribute('max'));
 
-            if (inputValue > max) {
-                inputElement.value = max; // Đặt giá trị thành giá trị max nếu vượt quá
-                toastify().warning(`Số lượng vượt quá ${max}`);
-            }
+                if (inputValue > max) {
+                    inputElement.value = max; // Đặt giá trị thành giá trị max nếu vượt quá
+                    toastify().warning(`Số lượng vượt quá ${max}`);
+                }
 
-            if (inputValue < 1) {
-                inputValue = inputValue; // Đặt giá trị thành giá trị max nếu vượt quá
-                toastify().warning(`Số lượng không được nhỏ hơn 1`);
-            }
-        });
+                if (inputValue < 1) {
+                    inputValue = inputValue; // Đặt giá trị thành giá trị max nếu vượt quá
+                    toastify().warning(`Số lượng không được nhỏ hơn 1`);
+                }
+            });
+        }
     </script>
     <script>
         function AddCart(product_id, user_id) {
@@ -379,6 +406,89 @@
                     });
                 }
                 return false;
+            });
+        });
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            // Lấy các phần tử và giá trị ban đầu
+            var priceRangeSlider = $('#priceRangeSlider');
+            var minPriceValue = $('#minPriceValue');
+            var maxPriceValue = $('#maxPriceValue');
+            var productList = $('#product-list');
+
+            // Thiết lập thanh trượt có thể trượt 2 đầu
+            priceRangeSlider.slider({
+                range: true,
+                min: 0,
+                max: 100000000,
+                step: 1000000,
+                values: [0, 100000000],
+                slide: function(event, ui) {
+                    var minPrice = ui.values[0];
+                    var maxPrice = ui.values[1];
+
+                    // Định dạng giá trị thành tiền tệ Việt Nam đồng
+                    var minPriceFormatted = minPrice.toLocaleString('vi-VN', {
+                        style: 'currency',
+                        currency: 'VND'
+                    });
+                    var maxPriceFormatted = maxPrice.toLocaleString('vi-VN', {
+                        style: 'currency',
+                        currency: 'VND'
+                    });
+
+                    minPriceValue.text(minPriceFormatted);
+                    maxPriceValue.text(maxPriceFormatted);
+                }
+            });
+
+            // Hiển thị giá trị ban đầu trên thanh trượt
+            var initialMinPrice = priceRangeSlider.slider('values', 0);
+            var initialMaxPrice = priceRangeSlider.slider('values', 1);
+
+            // Định dạng giá trị ban đầu thành tiền tệ Việt Nam đồng
+            var initialMinPriceFormatted = initialMinPrice.toLocaleString('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            });
+            var initialMaxPriceFormatted = initialMaxPrice.toLocaleString('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            });
+
+            minPriceValue.text(initialMinPriceFormatted);
+            maxPriceValue.text(initialMaxPriceFormatted);
+
+            // Lọc danh sách khi nút "Lọc" được click
+            $('#filterButton').click(function() {
+                var minPrice = priceRangeSlider.slider('values', 0);
+                var maxPrice = priceRangeSlider.slider('values', 1);
+
+                // Định dạng giá trị Việt Nam đồng
+                var minPriceFormatted = minPrice.toLocaleString('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND'
+                });
+                var maxPriceFormatted = maxPrice.toLocaleString('vi-VN', {
+                    style: 'currency',
+                    currency: 'VND'
+                });
+
+                // Hiển thị giá trị đã định dạng
+                minPriceValue.text(minPriceFormatted);
+                maxPriceValue.text(maxPriceFormatted);
+
+                // Ẩn hoặc hiển thị các mục dựa trên khoảng giá
+                productList.find('.product-item-price').each(function() {
+                    var itemPrice = parseInt($(this).data('price'));
+                    if (itemPrice >= minPrice && itemPrice <= maxPrice) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
             });
         });
     </script>

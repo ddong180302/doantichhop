@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\Category;
+use App\Models\Gallery;
 use App\Models\Product;
 use App\Models\Specifications;
 use Illuminate\Http\Request;
@@ -136,13 +137,15 @@ class ProductController extends Controller
             foreach ($cart as $item) {
                 $total_price += $item->quantity * $item->product_price;
             }
-            $cate_product = Category::where('category_status', '1')->orderByDesc('category_id')->get();
+            $gallery = Gallery::where('product_id', $product_id)->get();
+            $category = Category::where('category_status', '1')->orderByDesc('category_id')->get();
             $detail_product = Product::join('tbl_category_product', 'tbl_category_product.category_id', '=', 'tbl_product.category_id')->join('tbl_specifications', 'tbl_specifications.product_id', '=', 'tbl_product.product_id')->where('tbl_product.product_id', $product_id)->first();
-            return view('pages.product.show_detail_product')->with('category', $cate_product)->with('detail_product', $detail_product)->with('cart', $cart)->with('count_product', $count_product)->with('total_price', $total_price);
+            return view('pages.product.show_detail_product', compact('category', 'detail_product', 'cart', 'count_product', 'total_price', 'gallery'));
         } else {
-            $cate_product = Category::where('category_status', '1')->orderByDesc('category_id')->get();
+            $gallery = Gallery::where('product_id', $product_id)->get();
+            $category = Category::where('category_status', '1')->orderByDesc('category_id')->get();
             $detail_product = Product::join('tbl_category_product', 'tbl_category_product.category_id', '=', 'tbl_product.category_id')->join('tbl_specifications', 'tbl_specifications.product_id', '=', 'tbl_product.product_id')->where('tbl_product.product_id', $product_id)->first();
-            return view('pages.product.show_detail_product')->with('category', $cate_product)->with('detail_product', $detail_product);
+            return view('pages.product.show_detail_product', compact('category', 'detail_product', 'gallery'));
         }
     }
 
@@ -269,5 +272,30 @@ class ProductController extends Controller
 
         $specifications->save();
         return redirect()->back()->with('message', 'Thêm thông số kỹ thuật sản phẩm thành công');
+    }
+
+    public function show_add_image($product_id)
+    {
+        return view('admin.product.show_add_image')->with('product_id', $product_id);
+    }
+
+    public function add_image_product(Request $request, $product_id)
+    {
+        $images = $request->file('images');
+        if ($images) {
+            foreach ($images as $image) {
+                $gallery = new Gallery();
+                $get_name_image = $image->getClientOriginalName();
+                $name_image = current(explode('.', $get_name_image));
+                $new_image = $name_image . '.' . $image->getClientOriginalExtension();
+                $image->move('public/uploads/product', $new_image);
+                $gallery->gallery_image = $new_image;
+                $gallery->product_id = $product_id;
+                $gallery->save();
+            }
+            return redirect()->back()->with('message', 'Thêm hình ảnh thành công');
+        } else {
+            return redirect()->back()->with('message', 'Thêm hình ảnh thất bại');
+        }
     }
 }

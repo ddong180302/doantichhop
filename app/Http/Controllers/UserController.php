@@ -215,11 +215,14 @@ class UserController extends Controller
 
     public function show_order_history($user_id)
     {
-        $order = Order::where('user_id', $user_id)->get();
-        foreach ($order as $item) {
-            $order_detail = Order_Detail::where('order_id', $item->order_id)->get();
-        }
-        return view('pages.user.order_history', compact('order', 'order_detail'));
+        $order = Order::where('user_id', $user_id)
+            ->join('tbl_xaphuongthitran', 'tbl_xaphuongthitran.xaid', '=', 'tbl_order.xaid')
+            ->join('tbl_quanhuyen', 'tbl_quanhuyen.maqh', '=', 'tbl_order.maqh')
+            ->join('tbl_tinhthanhpho', 'tbl_tinhthanhpho.matp', '=', 'tbl_order.matp')
+            ->select('tbl_order.*', 'tbl_xaphuongthitran.name_xaphuong', 'tbl_quanhuyen.name_quanhuyen', 'tbl_tinhthanhpho.name_city')
+            ->get();
+
+        return view('pages.user.order_history', compact('order'));
     }
 
     public function show_change_password_user($user_id)
@@ -246,5 +249,12 @@ class UserController extends Controller
         $key_users = $request->key_users;
         $search_users = Users::where('user_name', 'like', '%' . $key_users . '%')->paginate(4);
         return view('admin.user.search_users')->with('message', 'Các sản phẩm bạn muốn tìm')->with('search_users', $search_users);
+    }
+
+
+    public function show_detail_order_history($order_id)
+    {
+        $order_detail = Order_Detail::where('order_id', $order_id)->get();
+        return view('pages.user.show_order_history_detail', compact('order_detail'));
     }
 }

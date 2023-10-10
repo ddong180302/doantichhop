@@ -34,11 +34,14 @@ class Category extends Model
     protected $table = 'tbl_category_product';
     protected $hidden = [];
 
-    public function product()
+    // public function product()
+    // {
+    //     return $this->hasMany('App\Models\Product');
+    // }
+    public function products()
     {
-        return $this->hasMany('App\Models\Product');
+        return $this->hasMany(Product::class, 'category_id');
     }
-
     /**
      * The attributes that should be cast.
      *

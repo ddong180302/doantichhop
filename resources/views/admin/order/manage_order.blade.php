@@ -1,5 +1,10 @@
 @extends('admin_layout')
 @section('admin_content')
+    @if (session('message'))
+        <script>
+            toastify().success('{{ session('message') }}');
+        </script>
+    @endif
     <div class="table-agile-info">
         <div class="panel panel-default">
             <div class="panel-heading">
@@ -9,22 +14,15 @@
 
             </div>
             <div class="table-responsive">
-                <?php
-                $message = Session::get('message');
-                if ($message) {
-                    echo '<div class="text-alert">', $message, '</div>';
-                    Session::put('message', null);
-                }
-                ?>
                 <table class="table table-striped b-t b-light">
                     <thead>
                         <tr>
-                            <th>Thứ tự</th>
-                            <th>Mã đơn hàng</th>
-                            <th>Người đặt hàng</th>
-                            <th>Ngày tháng đặt hàng</th>
-                            <th>Tình trạng đơn hàng</th>
-                            <th>Hành động</th>
+                            <th style="text-align: center; align-items: center">Thứ tự</th>
+                            <th style="text-align: center; align-items: center">Mã đơn hàng</th>
+                            <th style="text-align: center; align-items: center">Người đặt hàng</th>
+                            <th style="text-align: center; align-items: center">Ngày tháng đặt hàng</th>
+                            <th style="text-align: center; align-items: center">Trạng thái đơn hàng</th>
+                            <th style="text-align: center; align-items: center">Hành động</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -37,18 +35,24 @@
                                 $user = $users[$key]->first(); // Lấy đối tượng Users đầu tiên từ collection
                             @endphp
                             <tr>
-                                <td>{{ $i }}</td>
-                                <td>{{ $ord->order_id }}</td>
-                                <td>{{ $user->user_name }}</td>
-                                <td>{{ $ord->created_at }}</td>
-                                <td>
-                                    @if ($ord->order_status == 1)
-                                        Đơn hàng mới
-                                    @else
-                                        Đã xử lý
+                                <td style="text-align: center; align-items: center">{{ $i }}</td>
+                                <td style="text-align: center; align-items: center">{{ $ord->order_id }}</td>
+                                <td style="text-align: center; align-items: center">{{ $user->user_name }}</td>
+                                <td style="text-align: center; align-items: center">{{ $ord->created_at }}</td>
+                                <td style="text-align: center; align-items: center">
+                                    @if ($ord->order_status === 1)
+                                        Chưa xử lý
+                                    @elseif($ord->order_status === 2)
+                                        Đang xử lý
+                                    @elseif($ord->order_status === 3)
+                                        Đang đóng gói
+                                    @elseif($ord->order_status === 4)
+                                        Đang vận chuyển
+                                    @elseif($ord->order_status === 5)
+                                        Hoàn thành
                                     @endif
                                 </td>
-                                <td>
+                                <td style="text-align: center; align-items: center">
                                     <a href="{{ URL::to('/view-order/' . $ord->order_id) }}" class="active styling-edit"
                                         ui-toggle-class="">
                                         <i class="fa fa-eye text-success text-active"></i>

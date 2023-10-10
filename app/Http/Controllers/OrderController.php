@@ -15,11 +15,24 @@ use App\Models\XaPhuongThiTran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Redirect;
+
 
 
 
 class OrderController extends Controller
 {
+
+    public function AuthLogin()
+    {
+        $user = Auth::user();
+        if ($user) {
+            return Redirect::to('dasboard');
+        } else {
+            return Redirect::to('admin')->send();
+        }
+    }
     public function show_order($user_id)
     {
         $cart = Cart::where('user_id', $user_id)->first();
@@ -96,6 +109,7 @@ class OrderController extends Controller
                 $order_detail->product_name = $item->name;
                 $order_detail->product_price = $item->price;
                 $order_detail->product_quantity = $item->quantity;
+                $order_detail->product_image = $item->image;
 
                 $order_detail->save();
             }
@@ -114,5 +128,38 @@ class OrderController extends Controller
         } else {
             return redirect()->back()->with('message', 'Mã xác thực bạn gửi không hợp lệ, vui lòng nhập lại');
         }
+    }
+
+
+    //admin
+    public function view_order($order_id)
+    {
+        $this->AuthLogin();
+        $order = Order::where('order_id', $order_id)->first();
+        $user = Users::where('user_id', $order->user_id)->first();
+        $order_detail = Order_Detail::where('order_id', $order_id)->get();
+
+        return view('admin.order.view_order', compact('order', 'user', 'order_detail'));
+    }
+
+    public function manage_order()
+    {
+        $this->AuthLogin();
+        $get_all_order = Order::paginate(5);
+        $users = [];
+        foreach ($get_all_order as $order) {
+            $user = Users::where('user_id', $order->user_id)->get();
+            $users[] = $user;
+        }
+        return view('admin.order.manage_order', compact('get_all_order', 'users'));
+    }
+
+    public function update_status_order(Request $request, $order_id)
+    {
+        $this->AuthLogin();
+        $data = array();
+        $data['order_status'] = intval($request->order_status);
+        Order::where('order_id', $order_id)->update($data);
+        return redirect()->back()->with('message', 'Cập nhật trạng thái đơn hàng thành công');
     }
 }

@@ -34,6 +34,9 @@
                         <div class="product-price">
                             {{ number_format($product->product_price) }} vnđ
                         </div>
+                        <div class="" style="color: black">
+                            Đã bán: {{ $product->product_sold }}
+                        </div>
                     </div>
                 </div>
             </div>
