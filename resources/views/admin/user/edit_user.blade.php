@@ -33,11 +33,28 @@
                             <div class="form-group">
                                 <label>Quyền tài khoản</label>
                                 <select name="user_role" class="form-control input-sm m-bot15">
-                                    <option value="QUANTRIVIEN">Quản trị viên</option>
-                                    <option value="NGUOIDUNG">Người dùng</option>
+                                    @if ($edit_user->user_role === 'QUANTRIVIEN')
+                                        <option value="QUANTRIVIEN">Quản trị viên</option>
+                                        <option value="NGUOIDUNG">Người dùng</option>
+                                    @else
+                                        <option value="NGUOIDUNG">Người dùng</option>
+                                        <option value="QUANTRIVIEN">Quản trị viên</option>
+                                    @endif
                                 </select>
                             </div>
-                            <button type="submit" name="add_user" class="btn btn-info">Thêm Người Dùng</button>
+                            <div class="form-group">
+                                <label>Trạng thái người dùng</label>
+                                <select name="user_status" class="form-control input-sm m-bot15">
+                                    @if ($edit_user->user_status === 1)
+                                        <option value="1">Hiển thị</option>
+                                        <option value="0">Ẩn</option>
+                                    @else
+                                        <option value="0">Ẩn</option>
+                                        <option value="1">Hiển thị</option>
+                                    @endif
+                                </select>
+                            </div>
+                            <button type="submit" name="add_user" class="btn btn-info">Cập Nhật Người Dùng</button>
                         </form>
                     </div>
 

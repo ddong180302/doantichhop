@@ -250,7 +250,7 @@
                                         </div>
                                         <div class="pi-text">
                                             <a href="{{ URL::to('/chi-tiet-san-pham/' . $product->product_id) }}">
-                                                <h5>{{ $product->product_name }} VNĐ</h5>
+                                                <h5>{{ $product->product_name }}</h5>
                                             </a>
                                             <div class="product-price">
                                                 {{ number_format($product->product_price) }} vnđ

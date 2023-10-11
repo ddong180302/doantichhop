@@ -15,6 +15,9 @@ return new class extends Migration
             $table->increments('cart_detail_id');
             $table->integer('cart_id');
             $table->integer('product_id');
+            $table->string('image');
+            $table->string('name');
+            $table->integer('price');
             $table->integer('quantity');
             $table->timestamps();
         });

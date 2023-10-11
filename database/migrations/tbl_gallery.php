@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('tbl_gallery', function (Blueprint $table) {
             $table->increments('gallery_id');
-            $table->string('gallery_name');
             $table->string('gallery_image');
             $table->integer('product_id');
             $table->timestamps();

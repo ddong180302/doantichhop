@@ -15,7 +15,9 @@ return new class extends Migration
             $table->increments('order_id');
             $table->integer('user_id');
             $table->integer('order_status');
-            $table->string('order_destroy');
+            $table->integer('xaid');
+            $table->integer('maqh');
+            $table->integer('matp');
             $table->timestamps();
         });
     }

@@ -17,9 +17,7 @@ class CategoryProduct extends Controller
         if (Auth::user()) {
             $user = Auth::user();
             $user_role = Auth::user()->user_role;
-            if ($user && $user_role === "QUANTRIVIEN") {
-                return Redirect::to('/dasboard');
-            } else {
+            if ($user && $user_role !== "QUANTRIVIEN") {
                 return Redirect::to('login')->send();
             }
         } else {

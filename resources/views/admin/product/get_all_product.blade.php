@@ -65,8 +65,8 @@
                                 <td style="text-align: center; align-items: center">{{ $product->product_price }}</td>
                                 <td style="text-align: center; align-items: center">{{ $product->product_sold }}</td>
                                 <td style="text-align: center; align-items: center"><img
-                                        src="public/uploads/product/{{ $product->product_image }}" height="100"
-                                        width="150"></td>
+                                        src="{{ asset('public/uploads/product/' . $product->product_image) }}"
+                                        height="100" width="150"></td>
                                 <td style="text-align: center; align-items: center">
                                     <span class="text-ellipsis">
                                         <?php

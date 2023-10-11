@@ -137,9 +137,8 @@ class UserController extends Controller
         $this->AuthLogin();
         $data = array();
         $data['user_name'] = $request->user_name;
-        $data['user_name'] = $request->user_name;
-        $data['user_name'] = $request->user_name;
-        $data['user_name'] = $request->user_name;
+        $data['user_phone'] = $request->user_phone;
+        $data['user_role'] = $request->user_role;
         $data['user_status'] = $request->user_status;
         Users::where('user_id', $user_id)->update($data);
         return Redirect::to('get-all-user')->with('message', 'Cập nhật người dùng thành công');

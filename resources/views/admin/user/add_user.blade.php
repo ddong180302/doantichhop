@@ -33,8 +33,8 @@
                             <div class="form-group">
                                 <label>Quyền tài khoản</label>
                                 <select name="user_role" class="form-control input-sm m-bot15">
-                                    <option value="QUANTRIVIEN">Quản trị viên</option>
                                     <option value="NGUOIDUNG">Người dùng</option>
+                                    <option value="QUANTRIVIEN">Quản trị viên</option>
                                 </select>
                             </div>
                             <button type="submit" name="add_user" class="btn btn-info">Thêm Người Dùng</button>

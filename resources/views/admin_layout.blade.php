@@ -185,7 +185,7 @@ Author: NHóm 4
                 <div class="leftside-navigation">
                     <ul class="sidebar-menu" id="nav-accordion">
                         <li>
-                            <a class="active" href="{{ URL::to('/dashboard') }}">
+                            <a href="{{ URL::to('/dashboard') }}">
                                 <i class="fa fa-dashboard"></i>
                                 <span>Tổng quan</span>
                             </a>
@@ -197,7 +197,9 @@ Author: NHóm 4
                                 <span>Đơn hàng</span>
                             </a>
                             <ul class="sub">
-                                <li><a href="{{ URL::to('/manage-order') }}">Quản lý đơn hàng</a></li>
+                                <li>
+                                    <a href="{{ URL::to('/manage-order') }}">Quản lý đơn hàng</a>
+                                </li>
                             </ul>
                         </li>
                         <li class="sub-menu">
@@ -206,8 +208,11 @@ Author: NHóm 4
                                 <span>Danh mục sản phẩm</span>
                             </a>
                             <ul class="sub">
-                                <li><a href="{{ URL::to('/add-category-product') }}">Thêm danh mục sản phẩm</a></li>
-                                <li><a href="{{ URL::to('/get-all-category-product') }}">Liệt kê danh mục sản phẩm</a>
+                                <li>
+                                    <a href="{{ URL::to('/add-category-product') }}">Thêm danh mục sản phẩm</a>
+                                </li>
+                                <li>
+                                    <a href="{{ URL::to('/get-all-category-product') }}">Liệt kê danh mục sản phẩm</a>
                                 </li>
                             </ul>
                         </li>
@@ -217,8 +222,11 @@ Author: NHóm 4
                                 <span>Phương thức thanh toán</span>
                             </a>
                             <ul class="sub">
-                                <li><a href="{{ URL::to('/show-add-payment') }}">Thêm phương thức thanh toán</a></li>
-                                <li><a href="{{ URL::to('/get-all-payment') }}">Liệt kê phương thức thanh toán</a>
+                                <li>
+                                    <a href="{{ URL::to('/show-add-payment') }}">Thêm phương thức thanh toán</a>
+                                </li>
+                                <li>
+                                    <a href="{{ URL::to('/get-all-payment') }}">Liệt kê phương thức thanh toán</a>
                                 </li>
                             </ul>
                         </li>
@@ -229,8 +237,12 @@ Author: NHóm 4
                                 <span>Sản phẩm</span>
                             </a>
                             <ul class="sub">
-                                <li><a href="{{ URL::to('/add-product') }}">Thêm sản phẩm</a></li>
-                                <li><a href="{{ URL::to('/get-all-product') }}">Liệt kê sản phẩm</a></li>
+                                <li>
+                                    <a href="{{ URL::to('/add-product') }}">Thêm sản phẩm</a>
+                                </li>
+                                <li>
+                                    <a href="{{ URL::to('/get-all-product') }}">Liệt kê sản phẩm</a>
+                                </li>
                             </ul>
                         </li>
 
@@ -240,9 +252,8 @@ Author: NHóm 4
                                 <span>Thông số kỹ thuật</span>
                             </a>
                             <ul class="sub">
-                                <li><a href="{{ URL::to('/add-specifications') }}">Thêm thông số kỹ thuật sản phẩm</a>
-                                </li>
-                                <li><a href="{{ URL::to('/get-view-specifications') }}">Liệt kê chi tiết kỹ thuật</a>
+                                <li>
+                                    <a href="{{ URL::to('/add-specifications') }}">Thêm thông số kỹ thuật sản phẩm</a>
                                 </li>
                             </ul>
                         </li>
@@ -253,9 +264,11 @@ Author: NHóm 4
                                 <span>Người Dùng</span>
                             </a>
                             <ul class="sub">
-                                <li><a href="{{ URL::to('/show-add-user') }}">Thêm người dùng</a>
+                                <li>
+                                    <a href="{{ URL::to('/show-add-user') }}">Thêm người dùng</a>
                                 </li>
-                                <li><a href="{{ URL::to('/get-all-user ') }}">Liệt kê người dùng</a>
+                                <li>
+                                    <a href="{{ URL::to('/get-all-user ') }}">Liệt kê người dùng</a>
                                 </li>
                             </ul>
                         </li>
@@ -288,7 +301,6 @@ Author: NHóm 4
     <script src="{{ asset('public/backend/js/scripts.js') }}"></script>
     <script src="{{ asset('public/backend/js/jquery.slimscroll.js') }}"></script>
     <script src="{{ asset('public/backend/js/jquery.nicescroll.js') }}"></script>
-    <script src="{{ asset('public/backend/ckeditor/ckeditor.js') }}"></script>
 
     <script type="text/javascript">
         $(document).ready(function() {

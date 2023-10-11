@@ -39,7 +39,10 @@ class ProductController extends Controller
     public function get_all_product()
     {
         $this->AuthLogin();
-        $get_all_product = Product::join('tbl_category_product', 'tbl_category_product.category_id', '=', 'tbl_product.category_id')->paginate(4);
+        $get_all_product =
+            Product::orderBy('product_id', 'desc')
+            ->join('tbl_category_product', 'tbl_category_product.category_id', '=', 'tbl_product.category_id')
+            ->paginate(4);
         return view('admin.product.get_all_product', compact('get_all_product'));
     }
 
@@ -293,9 +296,9 @@ class ProductController extends Controller
                 $gallery->product_id = $product_id;
                 $gallery->save();
             }
-            return redirect()->back()->with('message', 'Thêm hình ảnh thành công');
+            return Redirect::to('/get-all-product')->with('message', 'Thêm hình ảnh thành công');
         } else {
-            return redirect()->back()->with('message', 'Thêm hình ảnh thất bại');
+            return Redirect::to('/get-all-product')->with('message', 'Thêm hình ảnh thất bại');
         }
     }
 }

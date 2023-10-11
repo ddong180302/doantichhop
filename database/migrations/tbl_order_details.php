@@ -17,8 +17,8 @@ return new class extends Migration
             $table->integer('product_id');
             $table->string('product_name');
             $table->integer('product_price');
-            $table->string('product_feeship');
             $table->integer('product_quantity');
+            $table->string('product_image');
             $table->timestamps();
         });
     }
