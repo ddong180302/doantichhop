@@ -262,8 +262,7 @@ class ProductController extends Controller
         $specifications->ram = $data['ram'];
         $specifications->storage = $data['storage'];
         $specifications->graphics_card = $data['graphics_card'];
-        $specifications->screen_size = $data['screen_size'];
-        $specifications->screen_resolution = $data['screen_resolution'];
+        $specifications->screen = $data['screen'];
         $specifications->operating_system = $data['operating_system'];
         $specifications->weight = $data['weight'];
         $specifications->battery = $data['battery'];

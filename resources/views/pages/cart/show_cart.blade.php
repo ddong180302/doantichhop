@@ -107,8 +107,8 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="breadcrumb-text product-more">
-                        <a href="{{ URL::to('/') }}"><i class="fa fa-home"></i> Home</a>
-                        <span>Shopping Cart</span>
+                        <a href="{{ URL::to('/') }}"><i class="fa fa-home"></i>Trang Chủ</a>
+                        <span>Giỏ Hàng</span>
                     </div>
                 </div>
             </div>
@@ -116,7 +116,7 @@
     </div>
     <!-- Breadcrumb Section Begin -->
 
-    <!-- Shopping Cart Section Begin -->
+    <!-- Giỏ Hàng Section Begin -->
     <section class="shopping-cart spad">
         <div class="container">
             <div class="row">
@@ -215,7 +215,7 @@
             </div>
         </div>
     </section>
-    <!-- Shopping Cart Section End -->
+    <!-- Giỏ Hàng Section End -->
 
     <!-- Footer Section Begin -->
     <footer class="footer-section">

@@ -7,8 +7,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\CheckoutController;
-use App\Http\Controllers\DeliveryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\UserController;
@@ -26,6 +24,7 @@ Route::get('/chi-tiet-san-pham/{product_id}', [ProductController::class, 'detail
 
 //Backend
 Route::get('/dashboard', [AdminController::class, 'show_dashboard']);
+Route::post('/filter-dashboard', [AdminController::class, 'filter_dashboard']);
 
 //Category product
 Route::get('/add-category-product', [CategoryProduct::class, 'add_category_product']);
@@ -62,17 +61,6 @@ Route::get('/filter', [ProductController::class, 'filter']);
 Route::get('/filter-product', [ProductController::class, 'filter_product']);
 Route::get('/show-add-image/{product_id}', [ProductController::class, 'show_add_image']);
 Route::post('/add-image-product/{product_id}', [ProductController::class, 'add_image_product']);
-
-
-
-
-//checkout
-Route::get('/login-checkout', [CheckoutController::class, 'login_checkout']);
-Route::post('/save-checkout-customer', [CheckoutController::class, 'save_checkout_customer']);
-Route::post('/order-place', [CheckoutController::class, 'order_place']);
-Route::get('/logout-checkout', [CheckoutController::class, 'logout_checkout']);
-Route::get('/payment', [CheckoutController::class, 'payment']);
-Route::get('/checkout', [CheckoutController::class, 'checkout']);
 
 
 //order

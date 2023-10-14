@@ -40,14 +40,8 @@
                                 <input type="text" class="form-control" name="graphics_card" placeholder="Card đồ họa">
                             </div>
                             <div class="form-group">
-                                <label>Kích thước màn hình</label>
-                                <input type="text" class="form-control" name="screen_size"
-                                    placeholder="Kích thước màn hình">
-                            </div>
-                            <div class="form-group">
-                                <label>Độ phân giải màn hình</label>
-                                <input type="text" class="form-control" name="screen_resolution"
-                                    placeholder="Độ phân giải màn hình">
+                                <label>Màn hình</label>
+                                <input type="text" class="form-control" name="screen" placeholder="Màn hình">
                             </div>
                             <div class="form-group">
                                 <label>Hệ điều hành</label>

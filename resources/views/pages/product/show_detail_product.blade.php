@@ -310,7 +310,7 @@
             toastify().success('{{ session('message') }}');
         </script>
     @endif
-    <!-- Shopping Cart Section Begin -->
+    <!-- Giỏ Hàng Section Begin -->
     <section class="product-shop spad">
         <div class="container">
             <div class="row">
@@ -461,13 +461,13 @@
                                         <tr style="height: 60px ; border: 2px solid #333;">
                                             <td style="width: 11%; height: 60px; padding:30px">
                                                 <span style="font-size: 14pt; font-family: 'times new roman', times;">
-                                                    Screen Size
+                                                    Screen
                                                 </span>
                                             </td>
                                             <td
                                                 style="width: 89%; height: 60px; border-left: 2px solid #333;padding:30px ">
                                                 <span
-                                                    style="font-size: 14pt; font-family: 'times new roman', times;">{{ $detail_product->screen_size }}</span>
+                                                    style="font-size: 14pt; font-family: 'times new roman', times;">{{ $detail_product->screen }}</span>
                                             </td>
                                         </tr>
                                         <tr style="height: 60px; border: 2px solid #333;">
@@ -510,7 +510,7 @@
                                 </table>
                             </div>
                         </div>
-                        <!-- Shopping Cart Section End -->
+                        <!-- Giỏ Hàng Section End -->
                     </div>
                 </div>
             </div>

@@ -67,6 +67,7 @@ class AuthController extends Controller
                 $user->user_email = $data['user_email'];
                 $user->user_phone = $data['user_phone'];
                 $user->user_token = $user_token;
+                $user->user_status = 0;
                 $user->user_password = Hash::make($data['user_password']);
                 $user->user_role = "NGUOIDUNG";
                 $user->save();

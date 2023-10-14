@@ -443,6 +443,47 @@ Author: NHóm 4
             xhttp.send(data);
         }
     </script>
+
+
+
+
+    {{-- <script>
+        document.getElementById('filter-form').addEventListener('submit', function(event) {
+            event.preventDefault(); // Ngăn chặn gửi yêu cầu form mặc định
+
+            var startDate = document.getElementById('start-date').value;
+            var endDate = document.getElementById('end-date').value;
+
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', '/filter-dashboard?start_date=' + startDate + '&end_date=' + endDate, true);
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    displayResults(response);
+                }
+            };
+            xhr.send();
+        });
+
+        function displayResults(data) {
+            var resultContainer = document.getElementById('result-container');
+            resultContainer.innerHTML = ''; // Xóa kết quả cũ (nếu có)
+
+            if (data.length === 0) {
+                resultContainer.innerText = 'Không có kết quả phù hợp.';
+                return;
+            }
+
+            var ul = document.createElement('ul');
+            data.forEach(function(item) {
+                var li = document.createElement('li');
+                li.innerText = item.name;
+                ul.appendChild(li);
+            });
+
+            resultContainer.appendChild(ul);
+        }
+    </script> --}}
 </body>
 
 </html>

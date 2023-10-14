@@ -245,7 +245,7 @@
         </div>
     </div>
 
-    <!-- Shopping Cart Section Begin -->
+    <!-- Giỏ Hàng Section Begin -->
     <section class="shopping-cart spad">
         <div class="container">
             <div class="row">
@@ -344,7 +344,7 @@
             </div>
         </div>
     </section>
-    <!-- Shopping Cart Section End -->
+    <!-- Giỏ Hàng Section End -->
 
     <!-- Footer Section Begin -->
     <footer class="footer-section">

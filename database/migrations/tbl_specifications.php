@@ -18,8 +18,7 @@ return new class extends Migration
             $table->string('ram')->nullable(); //bộ nhớ trong
             $table->string('storage')->nullable(); //ổ cứng
             $table->string('graphics_card')->nullable(); //card đồ họa
-            $table->string('screen_size')->nullable(); //kích thước màn hình
-            $table->string('screen_resolution')->nullable(); //độ phân giải màn hình
+            $table->string('screen')->nullable(); // màn hìnhh
             $table->string('operating_system')->nullable(); //hệ điều hành
             $table->string('weight')->nullable(); //trọng lượng
             $table->string('battery')->nullable(); //pin

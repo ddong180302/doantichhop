@@ -214,7 +214,7 @@
             toastify().success('{{ session('message') }}');
         </script>
     @endif
-    <!-- Shopping Cart Section Begin -->
+    <!-- Giỏ Hàng Section Begin -->
     <section class="product-shop spad">
         <div class="container">
             <div class="row">

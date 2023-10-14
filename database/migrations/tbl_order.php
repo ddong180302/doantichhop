@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('tbl_order', function (Blueprint $table) {
             $table->increments('order_id');
             $table->integer('user_id');
+            $table->integer('payment_id');
             $table->integer('order_status');
             $table->integer('xaid');
             $table->integer('maqh');
