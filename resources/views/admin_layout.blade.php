@@ -395,6 +395,33 @@ Author: NHóm 4
     </script>
 
     <script>
+        function filterDashboard() {
+            // Lấy giá trị từ ô input tìm kiếm
+            var startDate = document.querySelector('input[name="start_date"]').value;
+            var endDate = document.querySelector('input[name="end_date"]').value;
+
+            // Tạo yêu cầu AJAX để tìm kiếm sản phẩm
+            var xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    // Cập nhật phần giao diện cần reload
+                    document.getElementById('filter-statistical').innerHTML = this.responseText;
+                }
+            };
+
+            // Tạo dữ liệu yêu cầu
+            var data = new FormData();
+            data.append('start_date', startDate);
+            data.append('end_date', endDate);
+            data.append('_token', '{{ csrf_token() }}');
+
+            // Gửi yêu cầu POST AJAX
+            xhttp.open("POST", "{{ URL::to('/filter-dashboard') }}", true);
+            xhttp.send(data);
+        }
+    </script>
+
+    <script>
         function searchUsers() {
             // Lấy giá trị từ ô input tìm kiếm
             var keyUsers = document.querySelector('input[name="key_users"]').value;
@@ -445,45 +472,6 @@ Author: NHóm 4
     </script>
 
 
-
-
-    {{-- <script>
-        document.getElementById('filter-form').addEventListener('submit', function(event) {
-            event.preventDefault(); // Ngăn chặn gửi yêu cầu form mặc định
-
-            var startDate = document.getElementById('start-date').value;
-            var endDate = document.getElementById('end-date').value;
-
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', '/filter-dashboard?start_date=' + startDate + '&end_date=' + endDate, true);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    var response = JSON.parse(xhr.responseText);
-                    displayResults(response);
-                }
-            };
-            xhr.send();
-        });
-
-        function displayResults(data) {
-            var resultContainer = document.getElementById('result-container');
-            resultContainer.innerHTML = ''; // Xóa kết quả cũ (nếu có)
-
-            if (data.length === 0) {
-                resultContainer.innerText = 'Không có kết quả phù hợp.';
-                return;
-            }
-
-            var ul = document.createElement('ul');
-            data.forEach(function(item) {
-                var li = document.createElement('li');
-                li.innerText = item.name;
-                ul.appendChild(li);
-            });
-
-            resultContainer.appendChild(ul);
-        }
-    </script> --}}
 </body>
 
 </html>

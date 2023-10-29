@@ -94,7 +94,6 @@
                             <li><a href="{{ URL::to('/show-user-profile/' . Auth::user()->user_id) }}">Trang cá
                                     nhân</a></li>
                         @endif
-                        <li><a href="#">Contact</a></li>
                     </ul>
                 </nav>
                 <div id="mobile-menu-wrap"></div>

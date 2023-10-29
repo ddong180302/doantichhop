@@ -284,7 +284,6 @@
                                     nhân</a>
                             </li>
                         @endif
-                        <li><a href="#">Contact</a></li>
                     </ul>
                 </nav>
                 <div id="mobile-menu-wrap"></div>
@@ -398,7 +397,6 @@
                                                 </button>
                                             </a>
                                         @endif
-                                        <button class="btn btn-success">Mua hàng</button>
                                     </div>
                                 </div>
                             </div>

@@ -91,9 +91,13 @@
                         <label class="label">Địa chỉ:</label>
                     </div>
                     <div class="info-name">
-                        <input class="input"
-                            value="{{ $wards->name_xaphuong }}, {{ $province->name_quanhuyen }}, {{ $city->name_city }} "
-                            disabled>
+                        @if ($wards && $province && $city)
+                            <input class="input"
+                                value="{{ $wards->name_xaphuong }}, {{ $province->name_quanhuyen }}, {{ $city->name_city }} "
+                                disabled>
+                        @else
+                            <input class="input" type="text" disabled>
+                        @endif
                     </div>
                 </div>
 

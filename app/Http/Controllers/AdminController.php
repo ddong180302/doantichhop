@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Order_Detail;
+use App\Models\Product;
+use App\Models\Users;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -27,23 +30,49 @@ class AdminController extends Controller
     public function show_dashboard()
     {
         $this->AuthLogin();
-        return view('admin.dashboard');
+        $filteredItems = Order::get();
+        $users = Users::where('user_status', 1)->count();
+        $AllQuantityProduct = Product::sum('product_quantity');
+        $AllSoldQuantityProduct = Product::sum('product_sold');
+        $AllProductImport = $AllQuantityProduct + $AllSoldQuantityProduct;
+        $countOrder = 0;
+        $sumProducts = [];
+        foreach ($filteredItems as $order) {
+            $countOrder++;
+            $sumProduct = Order_Detail::where('order_id', $order->order_id)->sum('product_quantity');
+            $sumProducts[] = $sumProduct; // Lưu trữ tổng số lượng sản phẩm vào mảng
+        }
+        $sumProductOrder = 0;
+        foreach ($sumProducts as $quantityProduct) {
+            $sumProductOrder += $quantityProduct;
+        }
+
+        return view('admin.dashboard', compact('countOrder', 'sumProductOrder', 'AllQuantityProduct', 'AllProductImport', 'users'));
     }
 
     public function filter_dashboard(Request $request)
     {
-        //$data = $request->all();
-
         $startDate = $request->input('start_date');
         $endDate = $request->input('end_date');
-        //dd($startDate, $endDate);
-        //Kiểm tra và xử lý dữ liệu timestamp
-        // $startTimestamp = strtotime($startDate . ' 00:00:00');
-        // $endTimestamp = strtotime($endDate . ' 23:59:59');
-
-        // Lấy dữ liệu phù hợp từ cơ sở dữ liệu (ví dụ: bảng "items")
+        $users = Users::where('user_status', 1)->count();
         $filteredItems = Order::whereBetween('created_at', [$startDate, $endDate])->get();
+        $AllQuantityProduct = Product::whereBetween('created_at', [$startDate, $endDate])->sum('product_quantity');
+        $AllSoldQuantityProduct = Product::whereBetween('created_at', [$startDate, $endDate])->sum('product_sold');
+        $AllProductImport = $AllQuantityProduct + $AllSoldQuantityProduct;
+        $countOrder = 0;
+        $sumProducts = [];
+        foreach ($filteredItems as $order) {
+            $countOrder++;
+            $sumProduct = Order_Detail::where('order_id', $order->order_id)->sum('product_quantity');
+            $sumProducts[] = $sumProduct; // Lưu trữ tổng số lượng sản phẩm vào mảng
+        }
 
-        return view('admin.dashboard', compact('$filteredItems'));
+        $sumProductOrder = 0;
+        foreach ($sumProducts as $quantityProduct) {
+            $sumProductOrder += $quantityProduct;
+        }
+
+
+        return view('admin.filter-dashboard', compact('countOrder', 'sumProductOrder', 'AllQuantityProduct', 'AllProductImport', 'users'));
     }
 }

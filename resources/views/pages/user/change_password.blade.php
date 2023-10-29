@@ -8,7 +8,7 @@
 
     <div class="row profile-layout">
         <div class="change-password">
-            <form action="{{ URL::to('/change-password-user/' . Auth::user()->user_id) }}" method="POST">
+            <form id="change_password" action="{{ URL::to('/change-password-user/' . Auth::user()->user_id) }}" method="POST">
                 {{ csrf_field() }}
                 <div class="title">
                     <h3>Thay đổi mật khẩu</h3>

@@ -188,7 +188,6 @@
                             <li><a href="{{ URL::to('/show-cart/' . Auth::user()->user_id) }}">Giỏ hàng</a></li>
                             <li><a href="#">Trang cá nhân</a></li>
                         @endif
-                        <li><a href="#">Contact</a></li>
                     </ul>
                 </nav>
                 <div id="mobile-menu-wrap"></div>

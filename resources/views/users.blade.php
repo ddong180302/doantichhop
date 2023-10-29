@@ -461,8 +461,8 @@
     </script>
 
     <script>
-        if (document.querySelector('form')) {
-            document.querySelector('form').addEventListener('submit', function(event) {
+        if (document.getElementById('change_password')) {
+            document.getElementById('change_password').addEventListener('submit', function(event) {
                 event.preventDefault(); // Ngăn chặn chuyển hướng mặc định khi submit form
 
                 // Lấy giá trị của các trường mật khẩu

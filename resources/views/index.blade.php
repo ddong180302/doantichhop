@@ -112,13 +112,14 @@
                 </div>
                 <div class="ht-right">
                     @if (Auth::user())
-                        <a href="{{ URL::to('/logout-auth') }}" class="login-panel"> <img
-                                style="width: 21px; border-radius: 50%; margin: 10px"
-                                src="{{ asset('public/uploads/user/' . Auth::user()->user_avatar) }}"
-                                alt="">Đăng
-                            xuất</a>
+                        <a href="{{ URL::to('/logout-auth') }}" class="login-panel">
+                            <img style="width: 21px; border-radius: 50%; margin: 10px"
+                                src="{{ asset('public/uploads/user/' . Auth::user()->user_avatar) }}" alt="">
+                            Đăng xuất
+                        </a>
                     @else
-                        <a href="{{ URL::to('/login') }}" class="login-panel"><i class="fa fa-user"></i>
+                        <a href="{{ URL::to('/login') }}" class="login-panel">
+                            <i class="fa fa-user"></i>
                             Đăng nhập
                         </a>
                     @endif
@@ -325,6 +326,7 @@
     <script src="{{ asset('public/frontend/index/js/jquery.slicknav.js') }}"></script>
     <script src="{{ asset('public/frontend/index/js/owl.carousel.min.js') }}"></script>
     <script src="{{ asset('public/frontend/index/js/main.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         var inputElement = document.getElementById('inputQuantity');
         if (inputElement) {

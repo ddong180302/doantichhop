@@ -37,7 +37,13 @@
                             <tr>
                                 <td style="text-align: center; align-items: center">{{ $i }}</td>
                                 <td style="text-align: center; align-items: center">{{ $ord->order_id }}</td>
-                                <td style="text-align: center; align-items: center">{{ $user->user_name }}</td>
+                                <td style="text-align: center; align-items: center">
+                                    @if ($user)
+                                        {{ $user->user_name }}
+                                    @else
+                                        (User không tồn tại)
+                                    @endif
+                                </td>
                                 <td style="text-align: center; align-items: center">{{ $ord->created_at }}</td>
                                 <td style="text-align: center; align-items: center">
                                     @if ($ord->order_status === 1)
